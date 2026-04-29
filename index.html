@@ -178,4 +178,226 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
         </div>
       </div>
       <div class="section">
-        <div class="section-header"><span class="section-
+        <div class="section-header"><span class="section-title">Resumen</span></div>
+        <div class="cards-grid">
+          <div class="stat-card accent"><div class="stat-card-label">Ingreso total</div><div class="stat-card-val" id="sc-total">$0</div><div class="stat-card-sub" id="sc-total-sub"></div></div>
+          <div class="stat-card"><div class="stat-card-label">Gastos fijos</div><div class="stat-card-val" style="color:var(--danger);" id="sc-gastos">$0</div><div class="stat-card-sub" id="sc-gastos-sub"></div></div>
+          <div class="stat-card"><div class="stat-card-label">Para deudas</div><div class="stat-card-val" style="color:var(--warn);" id="sc-deudas">$0</div><div class="stat-card-sub">40% del disponible</div></div>
+          <div class="stat-card"><div class="stat-card-label">Libre / ahorro</div><div class="stat-card-val" style="color:var(--green);" id="sc-ahorro">$0</div><div class="stat-card-sub">después de deudas</div></div>
+        </div>
+      </div>
+      <div class="mini-chart">
+        <div class="mini-chart-header"><span class="mini-chart-title">Proyección deuda</span><span class="mini-chart-val" id="proj-label">—</span></div>
+        <div class="bars" id="proj-bars"></div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💡</div>
+        <div><div class="tip-title" id="tip-title">Consejo</div><div class="tip-text" id="tip-text"></div></div>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-deudas">
+      <div class="header"><div class="greeting">Estado actual</div><div class="header-title">Tarjetas</div><div class="header-sub" id="d-total-sub">$0 deuda total</div></div>
+      <div class="section"><div class="debt-list" id="debt-list"></div></div>
+      <div class="mini-chart" style="margin:0 16px 16px;">
+        <div class="mini-chart-header"><span class="mini-chart-title">Interés est. (2.5%/mes)</span><span class="mini-chart-val" style="color:var(--danger);" id="d-interest">~$0</span></div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;" id="d-tip-text"></div>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-plan">
+      <div class="header"><div class="greeting">Tu plan</div><div class="header-title">Quincenas</div><div class="header-sub">Según tu asignación de gastos</div></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#7B6EF6;"></div>1ra quincena</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4ECDC4;"></div>2da quincena</div>
+        <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#7B6EF6,#4ECDC4);"></div>Ambas</div>
+      </div>
+      <div class="section">
+        <div class="plan-tabs">
+          <div class="plan-tab active" id="ptab-q1" onclick="switchPlan('q1')">1ra quinc.</div>
+          <div class="plan-tab" id="ptab-q2" onclick="switchPlan('q2')">2da quinc.</div>
+          <div class="plan-tab" id="ptab-mes" onclick="switchPlan('mes')">Mensual</div>
+        </div>
+        <div id="plan-q1"></div>
+        <div id="plan-q2" style="display:none;"></div>
+        <div id="plan-mes" style="display:none;"></div>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-edit">
+      <div class="header"><div class="greeting">Personaliza</div><div class="header-title">Editar</div><div class="header-sub">Asigna cada gasto a una quincena</div></div>
+      <div class="legend" style="padding:0 16px 14px;">
+        <div class="legend-item"><div class="legend-dot" style="background:#7B6EF6;"></div>Q1 = primera quincena</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4ECDC4;"></div>Q2 = segunda quincena</div>
+      </div>
+      <div class="edit-section">
+        <div class="edit-block">
+          <div class="edit-block-header"><span class="edit-block-title">Ingresos mensuales</span><span class="edit-block-total" id="etotal-ingresos" style="color:var(--green);">$0</span></div>
+          <div id="edit-ingresos-list"></div>
+        </div>
+        <button class="add-row-btn" onclick="openModal('ingreso')">+ Agregar ingreso</button>
+        <div style="height:14px;"></div>
+        <div class="edit-block">
+          <div class="edit-block-header"><span class="edit-block-title">Gastos fijos</span><span class="edit-block-total" id="etotal-gastos" style="color:var(--danger);">$0</span></div>
+          <div id="edit-gastos-list"></div>
+        </div>
+        <button class="add-row-btn" onclick="openModal('gasto')">+ Agregar gasto</button>
+        <div style="height:14px;"></div>
+        <div class="edit-block">
+          <div class="edit-block-header"><span class="edit-block-title">Tarjetas de crédito</span><span class="edit-block-total" id="etotal-deudas" style="color:var(--warn);">$0</span></div>
+          <div id="edit-deudas-list"></div>
+        </div>
+        <button class="add-row-btn" onclick="openModal('deuda')">+ Agregar tarjeta</button>
+        <div style="height:24px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 4L21 12V21H15V15H9V21H3V12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Inicio</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('deudas')" id="nav-deudas">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M2 10H22" stroke="currentColor" stroke-width="1.8"/><path d="M6 15H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="nav-label">Tarjetas</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('plan')" id="nav-plan">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="nav-label">Plan</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('edit')" id="nav-edit">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="nav-label">Editar</span>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modal-title">Agregar</div>
+      <div class="modal-field"><div class="modal-label">Nombre</div><input class="modal-input" id="modal-name" placeholder="Ej: Renta, Teléfono..." type="text"></div>
+      <div class="modal-field"><div class="modal-label">Monto ($)</div><input class="modal-input" id="modal-amount" placeholder="0.00" type="number" step="0.01" inputmode="decimal"></div>
+      <div id="modal-q-field" class="modal-field" style="display:none;">
+        <div class="modal-label">¿En qué quincena lo pagas?</div>
+        <div class="q-select-row">
+          <div class="q-select-btn" id="qsel-q1" onclick="selectQ('q1')">1ra quinc.</div>
+          <div class="q-select-btn" id="qsel-q2" onclick="selectQ('q2')">2da quinc.</div>
+          <div class="q-select-btn" id="qsel-both" onclick="selectQ('both')">Ambas</div>
+        </div>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-save" onclick="saveModal()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const SK='mf_v4';
+let state={
+  ingresos:[{id:1,name:'Quincena 1',amount:856.30,q:'q1'},{id:2,name:'Quincena 2',amount:856.30,q:'q2'},{id:3,name:'Ingreso extra',amount:180.00,q:'q2'}],
+  gastos:[{id:1,name:'Casa / Renta',amount:160.00,q:'q1'},{id:2,name:'Hipoteca cuota 1',amount:250.00,q:'q1'},{id:3,name:'Hipoteca cuota 2',amount:281.58,q:'q2'},{id:4,name:'Hipoteca cuota 3',amount:70.00,q:'q2'}],
+  deudas:[{id:1,name:'Tarjeta A',amount:1000},{id:2,name:'Tarjeta C',amount:1200},{id:3,name:'Tarjeta B',amount:3600}]
+};
+try{const s=localStorage.getItem(SK);if(s)state=JSON.parse(s);}catch(e){}
+function persist(){try{localStorage.setItem(SK,JSON.stringify(state));}catch(e){}}
+const $=id=>document.getElementById(id);
+let _nid=300;
+const fmt=n=>'$'+parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const fmtR=n=>'$'+Math.round(n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
+function calc(){
+  const ti=state.ingresos.reduce((s,i)=>s+parseFloat(i.amount||0),0);
+  const tg=state.gastos.reduce((s,g)=>s+parseFloat(g.amount||0),0);
+  const td=state.deudas.reduce((s,d)=>s+parseFloat(d.amount||0),0);
+  const disp=ti-tg,pd=Math.min(disp*0.40,disp),pa=disp-pd;
+  const q1inc=state.ingresos.filter(i=>i.q==='q1'||i.q==='both').reduce((s,i)=>s+(i.q==='both'?parseFloat(i.amount)/2:parseFloat(i.amount)),0);
+  const q2inc=state.ingresos.filter(i=>i.q==='q2'||i.q==='both').reduce((s,i)=>s+(i.q==='both'?parseFloat(i.amount)/2:parseFloat(i.amount)),0);
+  const q1gas=state.gastos.filter(g=>g.q==='q1'||g.q==='both').reduce((s,g)=>s+(g.q==='both'?parseFloat(g.amount)/2:parseFloat(g.amount)),0);
+  const q2gas=state.gastos.filter(g=>g.q==='q2'||g.q==='both').reduce((s,g)=>s+(g.q==='both'?parseFloat(g.amount)/2:parseFloat(g.amount)),0);
+  const q1debt=pd*0.5,q2debt=pd*0.5;
+  return{ti,tg,td,disp,pd,pa,q1inc,q2inc,q1gas,q2gas,q1debt,q2debt};
+}
+function simDebt(budget,rate){
+  if(!state.deudas.length||budget<=0)return{months:0,totalInterest:0,completedMonths:[]};
+  let bals=state.deudas.map(d=>parseFloat(d.amount||0));
+  let ti=0,month=0,done=new Array(bals.length).fill(null);
+  while(bals.some(b=>b>0.01)&&month<360){
+    month++;
+    for(let i=0;i<bals.length;i++){if(bals[i]>0){const int=bals[i]*rate;bals[i]+=int;ti+=int;}}
+    let rem=budget;
+    for(let i=0;i<bals.length;i++){
+      if(bals[i]>0.01){const first=bals.findIndex(b=>b>0.01)===i;const pay=first?Math.min(rem,bals[i]):Math.min(Math.max(bals[i]*0.05,15),bals[i],rem);bals[i]-=pay;rem-=pay;if(rem<=0)break;}
+    }
+    for(let i=0;i<bals.length;i++){if(bals[i]<=0.01&&done[i]===null){done[i]=month;bals[i]=0;}}
+  }
+  return{months:month,totalInterest:ti,completedMonths:done};
+}
+function renderHome(){
+  const c=calc();const{months,completedMonths}=simDebt(c.pd,0.025);
+  $('h-disponible').textContent=fmt(c.disp).replace('$','');
+  $('h-sub').textContent='ingreso '+fmt(c.ti)+' · gastos '+fmt(c.tg);
+  $('h-ingresos').textContent='+'+fmt(c.ti);$('h-gastos').textContent='-'+fmt(c.tg);
+  $('h-deuda').textContent=fmtR(c.td);
+  $('h-deuda-sub').textContent=state.deudas.length+' tarjeta'+(state.deudas.length!==1?'s':'')+' · ~'+months+' meses';
+  const pct=c.td>0?Math.min(Math.round((c.disp/c.td)*100),100):100;
+  $('ring-arc').setAttribute('stroke-dashoffset',(163.4-163.4*pct/100).toFixed(1));$('ring-pct').textContent=pct+'%';
+  $('sc-total').textContent=fmtR(c.ti);$('sc-total-sub').textContent=state.ingresos.length+' fuente'+(state.ingresos.length!==1?'s':'');
+  $('sc-gastos').textContent=fmtR(c.tg);$('sc-gastos-sub').textContent=state.gastos.length+' concepto'+(state.gastos.length!==1?'s':'');
+  $('sc-deudas').textContent=fmtR(c.pd);$('sc-ahorro').textContent=fmtR(c.pa);
+  const bel=$('proj-bars');bel.innerHTML='';
+  if(c.td>0&&months>0){for(let i=0;i<10;i++){const r=Math.max(0,1-(i/9));const h=Math.max(Math.round(r*64),2);const clr=r>0.6?'#7B6EF6':r>0.3?'#4ECDC4':'#56CF7F';const lbl=i===0?'Hoy':Math.round((i/9)*months);bel.innerHTML+=`<div class="bar-col"><div class="bar-rect" style="height:${h}px;background:${clr};"></div><span class="bar-lbl">${lbl}</span></div>`;}$('proj-label').textContent=months+' meses';}
+  else{bel.innerHTML='<div style="padding:20px 0;font-size:13px;color:var(--green);">¡Sin deudas!</div>';$('proj-label').textContent='Libre';}
+  if(state.deudas.length){$('tip-title').textContent='Consejo del mes';$('tip-text').textContent='Con '+fmt(c.pd)+'/mes (bola de nieve), liquidas '+state.deudas[0].name+' en ~'+completedMonths[0]+' meses y quedas libre en ~'+months+' meses.';}
+  else{$('tip-title').textContent='¡Sin deudas!';$('tip-text').textContent='Tienes '+fmt(c.disp)+' disponible mensual.';}
+}
+const DCLRS=['var(--green)','var(--warn)','var(--danger)','var(--accent)','var(--accent2)'];
+const DBGS=['rgba(86,207,127,0.15)','rgba(255,179,71,0.15)','rgba(255,107,107,0.15)','rgba(123,110,246,0.15)','rgba(78,205,196,0.15)'];
+const DTCS=['var(--green)','var(--warn)','var(--danger)','var(--accent)','var(--accent2)'];
+const DLBLS=['1° Atacar ya','2° Mínimos','3° Mínimos','4°','5°'];
+function renderDeudas(){
+  const c=calc();const{months,totalInterest,completedMonths}=simDebt(c.pd,0.025);
+  $('d-total-sub').textContent=fmt(c.td)+' deuda total';$('d-interest').textContent='~'+fmtR(totalInterest);
+  const dl=$('debt-list');dl.innerHTML='';
+  state.deudas.forEach((d,i)=>{const pct=c.td>0?Math.round(parseFloat(d.amount)/c.td*100):0;const clr=DCLRS[Math.min(i,4)],bg=DBGS[Math.min(i,4)],tc=DTCS[Math.min(i,4)],lbl=DLBLS[Math.min(i,4)],cm=completedMonths[i]||months||'?';dl.innerHTML+=`<div class="debt-item"><div class="debt-top"><div><div class="debt-name">${d.name}</div></div><div class="debt-amount" style="color:${clr};">${fmt(d.amount)}</div></div><div class="debt-meta"><span class="debt-badge" style="background:${bg};color:${tc};">${lbl}</span><span class="debt-eta">~${cm} meses</span></div><div class="debt-bar"><div class="debt-bar-fill" style="width:${pct}%;background:${clr};"></div></div></div>`;});
+  if(!state.deudas.length)dl.innerHTML='<div style="text-align:center;padding:32px 0;font-size:14px;color:var(--muted);">Sin tarjetas registradas</div>';
+  $('d-tip-text').innerHTML='Con <strong style="color:var(--accent2);">'+fmt(c.pd)+'</strong>/mes quedas libre en <strong style="color:var(--accent2);">'+months+' meses</strong>. Bola de nieve: enfoca todo en la primera tarjeta.';
+}
+function qDot(q){if(q==='q1')return`<span class="q-dot" style="background:#7B6EF6;"></span>`;if(q==='q2')return`<span class="q-dot" style="background:#4ECDC4;"></span>`;return`<span class="q-dot" style="background:linear-gradient(90deg,#7B6EF6,#4ECDC4);"></span>`;}
+function renderPlan(){
+  const c=calc();
+  const q1rows=state.gastos.filter(g=>g.q==='q1'||g.q==='both').map(g=>`<div class="plan-row"><div class="plan-row-left" style="display:flex;align-items:center;">${qDot(g.q)}<span>${g.name}<small>${g.q==='both'?'mitad esta quinc.':'gasto fijo'}</small></span></div><div class="plan-row-right neg">-${fmt(g.q==='both'?parseFloat(g.amount)/2:g.amount)}</div></div>`).join('');
+  const q2rows=state.gastos.filter(g=>g.q==='q2'||g.q==='both').map(g=>`<div class="plan-row"><div class="plan-row-left" style="display:flex;align-items:center;">${qDot(g.q)}<span>${g.name}<small>${g.q==='both'?'mitad esta quinc.':'gasto fijo'}</small></span></div><div class="plan-row-right neg">-${fmt(g.q==='both'?parseFloat(g.amount)/2:g.amount)}</div></div>`).join('');
+  const q1free=c.q1inc-c.q1gas-c.q1debt,q2free=c.q2inc-c.q2gas-c.q2debt;
+  const fc=v=>v>=0?'var(--green)':'var(--danger)';
+  $('plan-q1').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Primera quincena</span><span class="plan-header-income">+${fmt(c.q1inc)}</span></div>${q1rows||'<div class="plan-empty">Sin gastos asignados a Q1</div>'}${state.deudas.length?`<div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>bola de nieve</small></div><div class="plan-row-right dbt">-${fmt(c.q1debt)}</div></div>`:''}<div class="plan-total"><span class="plan-total-label">Libre / ahorro</span><span class="plan-total-val" style="color:${fc(q1free)};">${fmt(Math.abs(q1free))}${q1free<0?' ⚠':''}</span></div></div>`;
+  $('plan-q2').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Segunda quincena</span><span class="plan-header-income">+${fmt(c.q2inc)}</span></div>${q2rows||'<div class="plan-empty">Sin gastos asignados a Q2</div>'}${state.deudas.length?`<div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>bola de nieve</small></div><div class="plan-row-right dbt">-${fmt(c.q2debt)}</div></div>`:''}<div class="plan-total"><span class="plan-total-label">Libre / ahorro</span><span class="plan-total-val" style="color:${fc(q2free)};">${fmt(Math.abs(q2free))}${q2free<0?' ⚠':''}</span></div></div>`;
+  $('plan-mes').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Mes completo</span><span class="plan-header-income">+${fmt(c.ti)}</span></div>${state.ingresos.map(i=>`<div class="plan-row"><div class="plan-row-left" style="display:flex;align-items:center;">${qDot(i.q||'q1')}<span>${i.name}<small>ingreso</small></span></div><div class="plan-row-right pos">+${fmt(i.amount)}</div></div>`).join('')}<div class="plan-row"><div class="plan-row-left">Total gastos fijos<small>${state.gastos.length} conceptos</small></div><div class="plan-row-right neg">-${fmt(c.tg)}</div></div>${state.deudas.length?`<div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>40% disponible</small></div><div class="plan-row-right dbt">-${fmt(c.pd)}</div></div>`:''}<div class="plan-total"><span class="plan-total-label">Disponible libre</span><span class="plan-total-val" style="color:var(--green);">${fmt(c.pa)}</span></div></div><div class="tip-card" style="margin:0 0 16px;"><div class="tip-icon">🎯</div><div><div class="tip-title">Fondo emergencia</div><div class="tip-text">Guarda ${fmt(c.pa*0.5)}/mes. En 6 meses acumulas ${fmt(c.pa*0.5*6)}.</div></div></div>`;
+}
+function cycleQ(id,type){const arr=type==='ingreso'?state.ingresos:state.gastos;const it=arr.find(i=>i.id===id);if(!it)return;const cycle={q1:'q2',q2:'both',both:'q1'};it.q=cycle[it.q||'q1']||'q1';persist();renderAll();}
+function renderEdit(){
+  const c=calc();
+  $('etotal-ingresos').textContent=fmt(c.ti);$('etotal-gastos').textContent=fmt(c.tg);$('etotal-deudas').textContent=fmt(c.td);
+  function qBtnHTML(id,q,type){const labels={q1:'Q1',q2:'Q2',both:'Q1+Q2'};const colors={q1:'q1-active',q2:'q2-active',both:'q1-active'};return `<div class="q-toggle"><button class="q-btn ${colors[q||'q1']}" onclick="cycleQ(${id},'${type}')">${labels[q||'q1']}</button></div>`;}
+  function buildList(lid,items,type,showQ){const el=$(lid);el.innerHTML='';items.forEach(item=>{const row=document.createElement('div');row.className='edit-row';row.innerHTML=`<span class="edit-row-name">${item.name}</span>${showQ?qBtnHTML(item.id,item.q,type):''}<input class="edit-input" type="number" step="0.01" inputmode="decimal" value="${parseFloat(item.amount).toFixed(2)}"><button class="edit-delete" onclick="deleteItem(${item.id},'${type}')">×</button>`;row.querySelector('input').addEventListener('change',function(){updateAmt(item.id,type,parseFloat(this.value)||0);});el.appendChild(row);});}
+  buildList('edit-ingresos-list',state.ingresos,'ingreso',true);
+  buildList('edit-gastos-list',state.gastos,'gasto',true);
+  buildList('edit-deudas-list',state.deudas,'deuda',false);
+}
+function updateAmt(id,type,val){const arr=type==='ingreso'?state.ingresos:type==='gasto'?state.gastos:state.deudas;const it=arr.find(i=>i.id===id);if(it){it.amount=val;persist();renderAll();}}
+function deleteItem(id,type){if(type==='ingreso')state.ingresos=state.ingresos.filter(i=>i.id!==id);else if(type==='gasto')state.gastos=state.gastos.filter(i=>i.id!==id);else state.deudas=state.deudas.filter(i=>i.id!==id);persist();renderAll();}
+let _mtype='',_mq='q1';
+function selectQ(q){_mq=q;['q1','q2','both'].forEach(v=>$('qsel-'+v).className='q-select-btn'+(v===q?' sel-'+v:''));}
+function openModal(type){_mtype=type;_mq='q1';const t={ingreso:'Nuevo ingreso',gasto:'Nuevo gasto fijo',deuda:'Nueva tarjeta'};$('modal-title').textContent=t[type]||'Agregar';$('modal-name').value='';$('modal-amount').value='';$('modal-q-field').style.display=(type==='gasto'||type==='ingreso')?'block':'none';['q1','q2','both'].forEach(v=>$('qsel-'+v).className='q-select-btn'+(v==='q1'?' sel-q1':''));$('modal-overlay').classList.add('open');setTimeout(()=>$('modal-name').focus(),350);}
+function closeModal(){$('modal-overlay').classList.remove('open');}
+function closeModalOutside(e){if(e.target===$('modal-overlay'))closeModal();}
+function saveModal(){const name=$('modal-name').value.trim(),amount=parseFloat($('modal-amount').value)||0;if(!name||amount<=0){$('modal-name').style.borderColor='var(--danger)';setTimeout(()=>$('modal-name').style.borderColor='',1500);return;}const item={id:++_nid,name,amount,q:_mq};if(_mtype==='ingreso')state.ingresos.push(item);else if(_mtype==='gasto')state.gastos.push(item);else{delete item.q;state.deudas.push(item);}persist();closeModal();renderAll();}
+const TABS=['home','deudas','plan','edit'];
+function switchTab(tab){TABS.forEach(t=>{$('tab-'+t).classList.remove('active');$('nav-'+t).classList.remove('active');});$('tab-'+tab).classList.add('active');$('nav-'+tab).classList.add('active');$('scroll-area').scrollTop=0;}
+function switchPlan(q){['q1','q2','mes'].forEach(p=>{$('plan-'+p).style.display=p===q?'block':'none';$('ptab-'+p).classList.toggle('active',p===q);});}
+function renderAll(){renderHome();renderDeudas();renderPlan();renderEdit();}
+function updateClock(){const n=new Date();$('clock').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
+updateClock();setInterval(updateClock,10000);
+const DS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const N=new Date();
+$('today-date').textContent=DS[N.getDay()]+' '+N.getDate()+' '+MS[N.getMonth()];
+renderAll();
+</script>
+</body>
+</html>
