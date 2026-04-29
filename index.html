@@ -87,6 +87,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .plan-total{padding:14px 18px;background:var(--surface2);display:flex;justify-content:space-between;align-items:center;}
 .plan-total-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
 .plan-total-val{font-size:20px;font-weight:800;font-family:var(--mono);}
+.plan-empty{padding:24px 18px;text-align:center;font-size:13px;color:var(--muted);}
 .edit-section{margin:0 16px 20px;}
 .edit-block{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:8px;}
 .edit-block-header{padding:12px 18px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
@@ -95,10 +96,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .edit-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);}
 .edit-row:last-child{border-bottom:none;}
 .edit-row-name{flex:1;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.edit-input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:13px;font-weight:500;width:95px;padding:6px 10px;text-align:right;outline:none;-webkit-appearance:none;}
+.edit-input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:13px;font-weight:500;width:88px;padding:6px 8px;text-align:right;outline:none;-webkit-appearance:none;}
 .edit-input:focus{border-color:var(--accent);}
+.q-toggle{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;}
+.q-btn{padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:var(--font);transition:all 0.15s;letter-spacing:0.04em;}
+.q-btn.q1-active{background:#7B6EF6;color:#fff;}
+.q-btn.q2-active{background:#4ECDC4;color:#0A0A0F;}
+.q-btn.both-active{background:linear-gradient(90deg,#7B6EF6,#4ECDC4);color:#fff;}
 .edit-delete{width:28px;height:28px;border-radius:8px;background:rgba(255,107,107,0.1);border:none;color:var(--danger);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
-.add-row-btn{width:100%;padding:12px;background:transparent;border:1px dashed rgba(123,110,246,0.3);border-radius:14px;color:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;margin-bottom:2px;}
+.add-row-btn{width:100%;padding:12px;background:transparent;border:1px dashed rgba(123,110,246,0.3);border-radius:14px;color:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;}
+.q-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;flex-shrink:0;}
 .modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.25s;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
 .modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 24px 48px;width:100%;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);}
@@ -109,6 +116,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .modal-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:7px;}
 .modal-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--font);font-size:16px;padding:14px 16px;outline:none;}
 .modal-input:focus{border-color:var(--accent);}
+.q-select-row{display:flex;gap:10px;margin-top:4px;}
+.q-select-btn{flex:1;padding:12px;border-radius:14px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s;}
+.q-select-btn.sel-q1{background:rgba(123,110,246,0.2);border-color:#7B6EF6;color:#7B6EF6;}
+.q-select-btn.sel-q2{background:rgba(78,205,196,0.2);border-color:#4ECDC4;color:#4ECDC4;}
+.q-select-btn.sel-both{background:rgba(123,110,246,0.15);border-color:#7B6EF6;color:#7B6EF6;}
 .modal-btns{display:flex;gap:10px;margin-top:20px;}
 .btn-cancel{flex:1;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;color:var(--muted);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;}
 .btn-save{flex:2;padding:14px;background:var(--accent);border:none;border-radius:14px;color:#fff;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;}
@@ -122,6 +134,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .tab-content.active{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .hero{animation:fadeUp 0.4s ease both;}
+.legend{display:flex;gap:14px;padding:0 24px 12px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -163,228 +178,4 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
         </div>
       </div>
       <div class="section">
-        <div class="section-header"><span class="section-title">Resumen</span></div>
-        <div class="cards-grid">
-          <div class="stat-card accent"><div class="stat-card-label">Ingreso total</div><div class="stat-card-val" id="sc-total">$0</div><div class="stat-card-sub" id="sc-total-sub"></div></div>
-          <div class="stat-card"><div class="stat-card-label">Gastos fijos</div><div class="stat-card-val" style="color:var(--danger);" id="sc-gastos">$0</div><div class="stat-card-sub" id="sc-gastos-sub"></div></div>
-          <div class="stat-card"><div class="stat-card-label">Para deudas</div><div class="stat-card-val" style="color:var(--warn);" id="sc-deudas">$0</div><div class="stat-card-sub">40% del disponible</div></div>
-          <div class="stat-card"><div class="stat-card-label">Libre / ahorro</div><div class="stat-card-val" style="color:var(--green);" id="sc-ahorro">$0</div><div class="stat-card-sub">después de deudas</div></div>
-        </div>
-      </div>
-      <div class="mini-chart">
-        <div class="mini-chart-header"><span class="mini-chart-title">Proyección deuda</span><span class="mini-chart-val" id="proj-label">—</span></div>
-        <div class="bars" id="proj-bars"></div>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">💡</div>
-        <div><div class="tip-title" id="tip-title">Consejo</div><div class="tip-text" id="tip-text"></div></div>
-      </div>
-    </div>
-    <div class="tab-content" id="tab-deudas">
-      <div class="header"><div class="greeting">Estado actual</div><div class="header-title">Tarjetas</div><div class="header-sub" id="d-total-sub">$0 deuda total</div></div>
-      <div class="section"><div class="debt-list" id="debt-list"></div></div>
-      <div class="mini-chart" style="margin:0 16px 16px;">
-        <div class="mini-chart-header"><span class="mini-chart-title">Interés est. (2.5%/mes)</span><span class="mini-chart-val" style="color:var(--danger);" id="d-interest">~$0</span></div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.6;" id="d-tip-text"></div>
-      </div>
-    </div>
-    <div class="tab-content" id="tab-plan">
-      <div class="header"><div class="greeting">Tu plan</div><div class="header-title">Quincenas</div><div class="header-sub">Distribución recomendada</div></div>
-      <div class="section">
-        <div class="plan-tabs">
-          <div class="plan-tab active" id="ptab-q1" onclick="switchPlan('q1')">1ra quinc.</div>
-          <div class="plan-tab" id="ptab-q2" onclick="switchPlan('q2')">2da quinc.</div>
-          <div class="plan-tab" id="ptab-mes" onclick="switchPlan('mes')">Mensual</div>
-        </div>
-        <div id="plan-q1"></div>
-        <div id="plan-q2" style="display:none;"></div>
-        <div id="plan-mes" style="display:none;"></div>
-      </div>
-    </div>
-    <div class="tab-content" id="tab-edit">
-      <div class="header"><div class="greeting">Personaliza</div><div class="header-title">Editar</div><div class="header-sub">Toca un monto para cambiarlo</div></div>
-      <div class="edit-section">
-        <div class="edit-block">
-          <div class="edit-block-header"><span class="edit-block-title">Ingresos mensuales</span><span class="edit-block-total" id="etotal-ingresos" style="color:var(--green);">$0</span></div>
-          <div id="edit-ingresos-list"></div>
-        </div>
-        <button class="add-row-btn" onclick="openModal('ingreso')">+ Agregar ingreso</button>
-        <div style="height:14px;"></div>
-        <div class="edit-block">
-          <div class="edit-block-header"><span class="edit-block-title">Gastos fijos mensuales</span><span class="edit-block-total" id="etotal-gastos" style="color:var(--danger);">$0</span></div>
-          <div id="edit-gastos-list"></div>
-        </div>
-        <button class="add-row-btn" onclick="openModal('gasto')">+ Agregar gasto</button>
-        <div style="height:14px;"></div>
-        <div class="edit-block">
-          <div class="edit-block-header"><span class="edit-block-title">Tarjetas de crédito</span><span class="edit-block-total" id="etotal-deudas" style="color:var(--warn);">$0</span></div>
-          <div id="edit-deudas-list"></div>
-        </div>
-        <button class="add-row-btn" onclick="openModal('deuda')">+ Agregar tarjeta</button>
-        <div style="height:24px;"></div>
-      </div>
-    </div>
-  </div>
-  <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 4L21 12V21H15V15H9V21H3V12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      <span class="nav-label">Inicio</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('deudas')" id="nav-deudas">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M2 10H22" stroke="currentColor" stroke-width="1.8"/><path d="M6 15H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span class="nav-label">Tarjetas</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('plan')" id="nav-plan">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span class="nav-label">Plan</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('edit')" id="nav-edit">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span class="nav-label">Editar</span>
-    </div>
-  </div>
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-handle"></div>
-      <div class="modal-title" id="modal-title">Agregar</div>
-      <div class="modal-field"><div class="modal-label">Nombre</div><input class="modal-input" id="modal-name" placeholder="Ej: Salario, Netflix..." type="text"></div>
-      <div class="modal-field"><div class="modal-label">Monto ($)</div><input class="modal-input" id="modal-amount" placeholder="0.00" type="number" step="0.01" inputmode="decimal"></div>
-      <div class="modal-btns">
-        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-        <button class="btn-save" onclick="saveModal()">Guardar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-const STORE_KEY='mf_v3';
-let state={
-  ingresos:[{id:1,name:'Quincena 1',amount:856.30},{id:2,name:'Quincena 2',amount:856.30},{id:3,name:'Ingreso extra',amount:180.00}],
-  gastos:[{id:1,name:'Casa / Renta',amount:160.00},{id:2,name:'Hipoteca cuota 1',amount:250.00},{id:3,name:'Hipoteca cuota 2',amount:281.58},{id:4,name:'Hipoteca cuota 3',amount:70.00}],
-  deudas:[{id:1,name:'Tarjeta A',amount:1000},{id:2,name:'Tarjeta C',amount:1200},{id:3,name:'Tarjeta B',amount:3600}]
-};
-try{const s=localStorage.getItem(STORE_KEY);if(s)state=JSON.parse(s);}catch(e){}
-function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}}
-const $=id=>document.getElementById(id);
-let _nid=200;
-const fmt=n=>'$'+parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-const fmtR=n=>'$'+Math.round(n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
-function calc(){
-  const ti=state.ingresos.reduce((s,i)=>s+parseFloat(i.amount||0),0);
-  const tg=state.gastos.reduce((s,g)=>s+parseFloat(g.amount||0),0);
-  const td=state.deudas.reduce((s,d)=>s+parseFloat(d.amount||0),0);
-  const disp=ti-tg,pd=Math.min(disp*0.40,disp),pa=disp-pd;
-  return{ti,tg,td,disp,pd,pa};
-}
-function simDebt(budget,rate){
-  if(!state.deudas.length||budget<=0)return{months:0,totalInterest:0,completedMonths:[]};
-  let bals=state.deudas.map(d=>parseFloat(d.amount||0));
-  let ti=0,month=0,done=new Array(bals.length).fill(null);
-  while(bals.some(b=>b>0.01)&&month<360){
-    month++;
-    for(let i=0;i<bals.length;i++){if(bals[i]>0){const int=bals[i]*rate;bals[i]+=int;ti+=int;}}
-    let rem=budget;
-    for(let i=0;i<bals.length;i++){
-      if(bals[i]>0.01){
-        const first=bals.findIndex(b=>b>0.01)===i;
-        const pay=first?Math.min(rem,bals[i]):Math.min(Math.max(bals[i]*0.05,15),bals[i],rem);
-        bals[i]-=pay;rem-=pay;if(rem<=0)break;
-      }
-    }
-    for(let i=0;i<bals.length;i++){if(bals[i]<=0.01&&done[i]===null){done[i]=month;bals[i]=0;}}
-  }
-  return{months:month,totalInterest:ti,completedMonths:done};
-}
-function renderHome(){
-  const c=calc();
-  const{months,completedMonths}=simDebt(c.pd,0.025);
-  $('h-disponible').textContent=fmt(c.disp).replace('$','');
-  $('h-sub').textContent='ingreso total '+fmt(c.ti)+' · gastos '+fmt(c.tg);
-  $('h-ingresos').textContent='+'+fmt(c.ti);
-  $('h-gastos').textContent='-'+fmt(c.tg);
-  $('h-deuda').textContent=fmtR(c.td);
-  $('h-deuda-sub').textContent=state.deudas.length+' tarjeta'+(state.deudas.length!==1?'s':'')+' · ~'+months+' meses';
-  const pct=c.td>0?Math.min(Math.round((c.disp/c.td)*100),100):100;
-  $('ring-arc').setAttribute('stroke-dashoffset',(163.4-163.4*pct/100).toFixed(1));
-  $('ring-pct').textContent=pct+'%';
-  $('sc-total').textContent=fmtR(c.ti);$('sc-total-sub').textContent=state.ingresos.length+' fuente'+(state.ingresos.length!==1?'s':'');
-  $('sc-gastos').textContent=fmtR(c.tg);$('sc-gastos-sub').textContent=state.gastos.length+' concepto'+(state.gastos.length!==1?'s':'');
-  $('sc-deudas').textContent=fmtR(c.pd);$('sc-ahorro').textContent=fmtR(c.pa);
-  const bel=$('proj-bars');bel.innerHTML='';
-  if(c.td>0&&months>0){
-    for(let i=0;i<10;i++){const r=Math.max(0,1-(i/9));const h=Math.max(Math.round(r*64),2);const clr=r>0.6?'#7B6EF6':r>0.3?'#4ECDC4':'#56CF7F';const lbl=i===0?'Hoy':Math.round((i/9)*months);bel.innerHTML+=`<div class="bar-col"><div class="bar-rect" style="height:${h}px;background:${clr};"></div><span class="bar-lbl">${lbl}</span></div>`;}
-    $('proj-label').textContent=months+' meses';
-  }else{bel.innerHTML='<div style="padding:20px 0;font-size:13px;color:var(--green);">¡Sin deudas!</div>';$('proj-label').textContent='Libre';}
-  if(state.deudas.length){$('tip-title').textContent='Consejo del mes';$('tip-text').textContent='Con '+fmt(c.pd)+'/mes (bola de nieve), liquidas '+state.deudas[0].name+' en ~'+completedMonths[0]+' meses y quedas libre en ~'+months+' meses.';}
-  else{$('tip-title').textContent='¡Sin deudas!';$('tip-text').textContent='Tienes '+fmt(c.disp)+' disponible mensual. Considera invertir o crear un fondo de emergencia.';}
-}
-const DCLRS=['var(--green)','var(--warn)','var(--danger)','var(--accent)','var(--accent2)'];
-const DBGS=['rgba(86,207,127,0.15)','rgba(255,179,71,0.15)','rgba(255,107,107,0.15)','rgba(123,110,246,0.15)','rgba(78,205,196,0.15)'];
-const DTCS=['var(--green)','var(--warn)','var(--danger)','var(--accent)','var(--accent2)'];
-const DLBLS=['1° Atacar ya','2° Mínimos','3° Mínimos','4°','5°'];
-function renderDeudas(){
-  const c=calc();const{months,totalInterest,completedMonths}=simDebt(c.pd,0.025);
-  $('d-total-sub').textContent=fmt(c.td)+' deuda total';$('d-interest').textContent='~'+fmtR(totalInterest);
-  const dl=$('debt-list');dl.innerHTML='';
-  state.deudas.forEach((d,i)=>{
-    const pct=c.td>0?Math.round(parseFloat(d.amount)/c.td*100):0;
-    const clr=DCLRS[Math.min(i,4)],bg=DBGS[Math.min(i,4)],tc=DTCS[Math.min(i,4)],lbl=DLBLS[Math.min(i,4)],cm=completedMonths[i]||months||'?';
-    dl.innerHTML+=`<div class="debt-item"><div class="debt-top"><div><div class="debt-name">${d.name}</div></div><div class="debt-amount" style="color:${clr};">${fmt(d.amount)}</div></div><div class="debt-meta"><span class="debt-badge" style="background:${bg};color:${tc};">${lbl}</span><span class="debt-eta">~${cm} meses</span></div><div class="debt-bar"><div class="debt-bar-fill" style="width:${pct}%;background:${clr};"></div></div></div>`;
-  });
-  if(!state.deudas.length)dl.innerHTML='<div style="text-align:center;padding:32px 0;font-size:14px;color:var(--muted);">Sin tarjetas registradas</div>';
-  $('d-tip-text').innerHTML='Con <strong style="color:var(--accent2);">'+fmt(c.pd)+'</strong>/mes quedas libre en <strong style="color:var(--accent2);">'+months+' meses</strong>. Método bola de nieve: enfoca el mayor pago en la primera tarjeta.';
-}
-function renderPlan(){
-  const c=calc();const hInc=c.ti/2;
-  let q1g=[],q2g=[],q1s=0,q2s=0;
-  [...state.gastos].sort((a,b)=>b.amount-a.amount).forEach(g=>{if(q1s<=q2s){q1g.push(g);q1s+=parseFloat(g.amount);}else{q2g.push(g);q2s+=parseFloat(g.amount);}});
-  const q1d=c.pd*0.5,q2d=c.pd*0.5,q1f=hInc-q1s-q1d,q2f=hInc-q2s-q2d;
-  const rows=gs=>gs.map(g=>`<div class="plan-row"><div class="plan-row-left">${g.name}<small>gasto fijo</small></div><div class="plan-row-right neg">-${fmt(g.amount)}</div></div>`).join('');
-  const fc=v=>v>=0?'var(--green)':'var(--danger)';
-  $('plan-q1').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Primera quincena</span><span class="plan-header-income">+${fmt(hInc)}</span></div>${rows(q1g)}<div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>bola de nieve</small></div><div class="plan-row-right dbt">-${fmt(q1d)}</div></div><div class="plan-total"><span class="plan-total-label">Libre / ahorro</span><span class="plan-total-val" style="color:${fc(q1f)};">${fmt(Math.abs(q1f))}${q1f<0?' ⚠':''}</span></div></div>`;
-  $('plan-q2').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Segunda quincena</span><span class="plan-header-income">+${fmt(hInc)}</span></div>${rows(q2g)}<div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>bola de nieve</small></div><div class="plan-row-right dbt">-${fmt(q2d)}</div></div><div class="plan-total"><span class="plan-total-label">Libre / ahorro</span><span class="plan-total-val" style="color:${fc(q2f)};">${fmt(Math.abs(q2f))}${q2f<0?' ⚠':''}</span></div></div>`;
-  $('plan-mes').innerHTML=`<div class="plan-card"><div class="plan-header"><span class="plan-header-title">Mes completo</span><span class="plan-header-income">+${fmt(c.ti)}</span></div>${state.ingresos.map(i=>`<div class="plan-row"><div class="plan-row-left">${i.name}<small>ingreso</small></div><div class="plan-row-right pos">+${fmt(i.amount)}</div></div>`).join('')}<div class="plan-row"><div class="plan-row-left">Total gastos fijos<small>${state.gastos.length} conceptos</small></div><div class="plan-row-right neg">-${fmt(c.tg)}</div></div><div class="plan-row"><div class="plan-row-left">Abono tarjetas<small>40% disponible</small></div><div class="plan-row-right dbt">-${fmt(c.pd)}</div></div><div class="plan-total"><span class="plan-total-label">Disponible libre</span><span class="plan-total-val" style="color:var(--green);">${fmt(c.pa)}</span></div></div><div class="tip-card" style="margin:0 0 16px;"><div class="tip-icon">🎯</div><div><div class="tip-title">Fondo emergencia</div><div class="tip-text">Guarda ${fmt(c.pa*0.5)}/mes. En 6 meses acumulas ${fmt(c.pa*0.5*6)} de colchón.</div></div></div>`;
-}
-function renderEdit(){
-  const c=calc();
-  $('etotal-ingresos').textContent=fmt(c.ti);$('etotal-gastos').textContent=fmt(c.tg);$('etotal-deudas').textContent=fmt(c.td);
-  function buildList(lid,items,type){
-    const el=$(lid);el.innerHTML='';
-    items.forEach(item=>{
-      const row=document.createElement('div');row.className='edit-row';
-      row.innerHTML=`<span class="edit-row-name">${item.name}</span><input class="edit-input" type="number" step="0.01" inputmode="decimal" value="${parseFloat(item.amount).toFixed(2)}"><button class="edit-delete" onclick="deleteItem(${item.id},'${type}')">×</button>`;
-      row.querySelector('input').addEventListener('change',function(){updateAmt(item.id,type,parseFloat(this.value)||0);});
-      el.appendChild(row);
-    });
-  }
-  buildList('edit-ingresos-list',state.ingresos,'ingreso');
-  buildList('edit-gastos-list',state.gastos,'gasto');
-  buildList('edit-deudas-list',state.deudas,'deuda');
-}
-function updateAmt(id,type,val){const arr=type==='ingreso'?state.ingresos:type==='gasto'?state.gastos:state.deudas;const it=arr.find(i=>i.id===id);if(it){it.amount=val;persist();renderAll();}}
-function deleteItem(id,type){if(type==='ingreso')state.ingresos=state.ingresos.filter(i=>i.id!==id);else if(type==='gasto')state.gastos=state.gastos.filter(i=>i.id!==id);else state.deudas=state.deudas.filter(i=>i.id!==id);persist();renderAll();}
-let _mtype='';
-function openModal(type){_mtype=type;const t={ingreso:'Nuevo ingreso',gasto:'Nuevo gasto fijo',deuda:'Nueva tarjeta'};$('modal-title').textContent=t[type]||'Agregar';$('modal-name').value='';$('modal-amount').value='';$('modal-overlay').classList.add('open');setTimeout(()=>$('modal-name').focus(),350);}
-function closeModal(){$('modal-overlay').classList.remove('open');}
-function closeModalOutside(e){if(e.target===$('modal-overlay'))closeModal();}
-function saveModal(){
-  const name=$('modal-name').value.trim(),amount=parseFloat($('modal-amount').value)||0;
-  if(!name||amount<=0){$('modal-name').style.borderColor='var(--danger)';setTimeout(()=>$('modal-name').style.borderColor='',1500);return;}
-  const item={id:++_nid,name,amount};
-  if(_mtype==='ingreso')state.ingresos.push(item);else if(_mtype==='gasto')state.gastos.push(item);else state.deudas.push(item);
-  persist();closeModal();renderAll();
-}
-const TABS=['home','deudas','plan','edit'];
-function switchTab(tab){TABS.forEach(t=>{$('tab-'+t).classList.remove('active');$('nav-'+t).classList.remove('active');});$('tab-'+tab).classList.add('active');$('nav-'+tab).classList.add('active');$('scroll-area').scrollTop=0;}
-function switchPlan(q){['q1','q2','mes'].forEach(p=>{$('plan-'+p).style.display=p===q?'block':'none';$('ptab-'+p).classList.toggle('active',p===q);});}
-function renderAll(){renderHome();renderDeudas();renderPlan();renderEdit();}
-function updateClock(){const n=new Date();$('clock').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
-updateClock();setInterval(updateClock,10000);
-const DS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-const N=new Date();
-$('today-date').textContent=DS[N.getDay()]+' '+N.getDate()+' '+MS[N.getMonth()];
-renderAll();
-</script>
-</body>
-</html>
+        <div class="section-header"><span class="section-
