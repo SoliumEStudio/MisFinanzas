@@ -22,9 +22,12 @@
   --font:'Poppins',sans-serif;--r:20px;--r2:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden;}
+html{height:100%;overflow:hidden;}body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden;position:fixed;width:100%;}
 .app{display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available;max-width:430px;margin:0 auto;position:relative;}
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:82px;}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:82px;min-height:0;overscroll-behavior:contain;}
+#app-main{position:absolute;inset:0;display:flex;flex-direction:column;}
+#app-main.app-main-hidden{display:none;}
+
 .scroll::-webkit-scrollbar{display:none;}
 .tab{display:none;}.tab.active{display:block;}
 
@@ -331,7 +334,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 </div>
 
 <!-- APP MAIN -->
-<div id="app-main" style="display:none;position:absolute;inset:0;flex-direction:column;">
+<div id="app-main" class="app-main-hidden">
 <div class="scroll" id="scroll">
 
   <!-- ══ INICIO ══ -->
@@ -652,7 +655,7 @@ function unlockApp(){
   state.unlocked=true;
   save();
   $('paywall').style.display='none';
-  const am=$('app-main');am.style.display='flex';am.style.flexDirection='column';
+  $('app-main').classList.remove('app-main-hidden');
   initApp();
 }
 // check if already unlocked
@@ -1113,7 +1116,7 @@ function initApp(){
 
 if(state.unlocked){
   $('paywall').style.display='none';
-  const am=$('app-main');am.style.display='flex';am.style.flexDirection='column';
+  $('app-main').classList.remove('app-main-hidden');
   initApp();
 } else {
   initSplash();
