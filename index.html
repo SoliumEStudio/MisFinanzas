@@ -10,600 +10,585 @@
 <title>Nexum</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ─── RESET & ROOT ─── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
   --bg:#0B0F14;--card:#121821;--card2:#1A2233;
-  --border:rgba(255,255,255,0.06);--border2:rgba(22,199,154,0.2);
+  --border:rgba(255,255,255,0.07);--border2:rgba(22,199,154,0.22);
   --text:#E6E8EA;--muted:#6B7A8D;--muted2:#9AA5B4;
-  --green:#16C79A;--green-dim:rgba(22,199,154,0.12);--green-glow:rgba(22,199,154,0.3);
-  --red:#FF4D6A;--red-dim:rgba(255,77,106,0.12);
-  --amber:#FFB830;--amber-dim:rgba(255,184,48,0.12);
-  --blue:#4A9EFF;--blue-dim:rgba(74,158,255,0.12);
-  --purple:#9B72FF;--purple-dim:rgba(155,114,255,0.12);
-  --font:'Poppins',sans-serif;--r:20px;--r2:14px;
+  --green:#16C79A;--gdim:rgba(22,199,154,0.13);--gglow:rgba(22,199,154,0.28);
+  --red:#FF4D6A;--rdim:rgba(255,77,106,0.13);
+  --amber:#FFB830;--adim:rgba(255,184,48,0.13);
+  --blue:#4A9EFF;--bdim:rgba(74,158,255,0.13);
+  --purple:#9B72FF;--pdim:rgba(155,114,255,0.13);
+  --font:'Poppins',sans-serif;
+  --nav-h:60px;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{height:100%;overflow:hidden;}body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden;position:fixed;width:100%;}
-.app{display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available;max-width:430px;margin:0 auto;position:relative;}
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:82px;min-height:0;overscroll-behavior:contain;}
-#app-main{position:absolute;inset:0;display:flex;flex-direction:column;}
-#app-main.app-main-hidden{display:none;}
 
-.scroll::-webkit-scrollbar{display:none;}
-.tab{display:none;}.tab.active{display:block;}
+/* ─── LAYOUT FOUNDATION ─── */
+html{height:100%;}
+body{
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  /* iOS Safari: prevent rubber-band on body */
+  overscroll-behavior:none;
+}
 
-/* NAV */
-.nav{position:absolute;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;background:rgba(11,15,20,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);padding:8px 0 env(safe-area-inset-bottom,10px);display:flex;justify-content:space-around;z-index:50;}
-.nb{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 10px;opacity:0.35;transition:opacity 0.2s;}
-.nb.active{opacity:1;}.nb svg{width:21px;height:21px;}
-.nb-label{font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;}
-.nb.active .nb-label{color:var(--green);}.nb.active svg{stroke:var(--green);}
+/* The one true app shell */
+#shell{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  max-width:430px;
+  margin:0 auto;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+}
 
-/* PAYWALL */
-.paywall{position:absolute;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
-.pw-logo{width:80px;height:80px;background:var(--green);border-radius:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 16px 48px var(--green-glow);}
-.pw-logo svg{width:44px;height:44px;}
-.pw-title{font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
-.pw-tagline{font-size:14px;color:var(--muted2);margin-bottom:32px;line-height:1.5;}
-.pw-features{display:flex;flex-direction:column;gap:12px;width:100%;margin-bottom:32px;text-align:left;}
-.pw-feature{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:12px 16px;}
-.pw-feat-icon{font-size:22px;flex-shrink:0;}
-.pw-feat-text{font-size:13px;font-weight:500;}
-.pw-feat-sub{font-size:11px;color:var(--muted2);}
-.pw-price-box{width:100%;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:20px;padding:20px;margin-bottom:16px;}
-.pw-price-main{font-size:40px;font-weight:800;color:var(--green);letter-spacing:-0.04em;}
-.pw-price-sub{font-size:12px;color:var(--muted2);margin-top:4px;}
-.pw-price-tag{display:inline-block;background:var(--amber-dim);color:var(--amber);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px;}
-.pw-btn{width:100%;padding:16px;background:var(--green);border:none;border-radius:16px;color:#000;font-family:var(--font);font-size:16px;font-weight:800;cursor:pointer;letter-spacing:0.01em;box-shadow:0 8px 28px var(--green-glow);}
-.pw-btn:active{transform:scale(0.97);}
+/* ─── SPLASH ─── */
+#splash{
+  position:absolute;
+  inset:0;
+  background:#0B0F14;
+  z-index:999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+#splash.out{animation:splashOut 0.6s ease forwards;}
+@keyframes splashOut{to{opacity:0;transform:scale(1.04);}}
+.sp-logo{animation:logoIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;}
+@keyframes logoIn{from{opacity:0;transform:scale(0.65);}to{opacity:1;transform:scale(1);}}
+.sp-name{font-size:32px;font-weight:800;letter-spacing:0.14em;color:#E6E8EA;margin-top:20px;animation:spUp 0.5s ease 0.85s both;}
+.sp-tag{font-size:11px;font-weight:500;letter-spacing:0.22em;color:#16C79A;margin-top:7px;text-transform:uppercase;animation:spUp 0.5s ease 1.05s both;}
+.sp-bar{width:90px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;margin-top:48px;animation:spUp 0.5s ease 1.2s both;}
+.sp-bar-fill{height:100%;width:0;background:#16C79A;border-radius:2px;animation:spLoad 1s ease 1.3s forwards;}
+@keyframes spUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spLoad{to{width:100%;}}
+
+/* ─── PAYWALL ─── */
+#paywall{
+  position:absolute;
+  inset:0;
+  background:var(--bg);
+  z-index:100;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:28px 24px;
+  text-align:center;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.pw-logo{width:80px;height:80px;background:var(--green);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 12px 36px var(--gglow);}
+.pw-title{font-size:28px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+.pw-sub{font-size:13px;color:var(--muted2);margin-bottom:24px;line-height:1.5;}
+.pw-feat{display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:24px;text-align:left;}
+.pw-fi{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:11px 14px;}
+.pw-fi-ico{font-size:20px;flex-shrink:0;}
+.pw-fi-t{font-size:13px;font-weight:500;}
+.pw-fi-s{font-size:11px;color:var(--muted2);}
+.pw-price{width:100%;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:18px;padding:18px;margin-bottom:14px;}
+.pw-price-n{font-size:40px;font-weight:800;color:var(--green);letter-spacing:-0.04em;}
+.pw-price-s{font-size:12px;color:var(--muted2);margin-top:3px;}
+.pw-price-tag{display:inline-block;background:var(--adim);color:var(--amber);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:7px;}
+.pw-btn{width:100%;padding:16px;background:var(--green);border:none;border-radius:14px;color:#000;font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px var(--gglow);}
 .pw-skip{font-size:12px;color:var(--muted);margin-top:12px;cursor:pointer;text-decoration:underline;}
 
-/* HEADER */
+/* ─── MAIN APP ─── */
+#main{
+  display:none;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  position:relative;
+}
+
+/* ─── SCROLL CONTENT ─── */
+#content{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 10px);
+}
+
+/* ─── TABS ─── */
+.tab{display:none;}
+.tab.on{display:block;}
+
+/* ─── NAV ─── */
+#nav{
+  flex-shrink:0;
+  height:var(--nav-h);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+  background:rgba(11,15,20,0.97);
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:50;
+}
+.nb{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  cursor:pointer;
+  padding:6px 10px;
+  opacity:0.35;
+  transition:opacity 0.2s;
+  border:none;
+  background:none;
+  color:var(--text);
+  font-family:var(--font);
+}
+.nb.on{opacity:1;}
+.nb svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.nb span{font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;}
+.nb.on{color:var(--green);}
+
+/* ─── HEADER ─── */
 .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 20px 4px;}
-.hdr-greeting{font-size:13px;color:var(--muted2);}
+.hdr-hi{font-size:13px;color:var(--muted2);}
 .hdr-name{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;}
-.notif-btn{width:38px;height:38px;background:var(--card);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);position:relative;cursor:pointer;flex-shrink:0;}
+.notif{width:38px;height:38px;background:var(--card);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);cursor:pointer;position:relative;flex-shrink:0;}
 .notif-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:var(--green);border-radius:50%;border:2px solid var(--bg);}
 
-/* BALANCE */
-.balance-card{margin:12px 16px;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:24px;padding:22px;position:relative;overflow:hidden;}
-.bal-glow{position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(22,199,154,0.15),transparent 70%);pointer-events:none;}
-.bal-label{font-size:11px;color:var(--muted2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
-.bal-amount{font-size:40px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:8px;}
-.bal-amount .sym{font-size:22px;font-weight:500;color:var(--muted2);vertical-align:super;margin-right:2px;}
+/* ─── BALANCE CARD ─── */
+.bal-card{margin:12px 16px;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:22px;padding:22px;position:relative;overflow:hidden;}
+.bal-glow{position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(22,199,154,0.14),transparent 70%);pointer-events:none;}
+.bal-lbl{font-size:11px;color:var(--muted2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+.bal-amt{font-size:40px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:8px;}
+.bal-sym{font-size:22px;font-weight:500;color:var(--muted2);vertical-align:super;margin-right:2px;}
 .bal-trend{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;}
-.bal-stats{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;margin-top:18px;background:rgba(0,0,0,0.2);border-radius:14px;overflow:hidden;}
-.bsi{padding:11px 0;text-align:center;}.bsd{background:rgba(255,255,255,0.05);}
-.bsi-val{font-size:14px;font-weight:600;margin-bottom:2px;}.bsi-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.05em;}
+.bal-stats{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;margin-top:18px;background:rgba(0,0,0,0.2);border-radius:13px;overflow:hidden;}
+.bsi{padding:11px 0;text-align:center;}
+.bsd{background:rgba(255,255,255,0.05);}
+.bsi-v{font-size:14px;font-weight:600;margin-bottom:2px;}
+.bsi-l{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* SCORE */
-.score-card{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:14px;}
+/* ─── SCORE ─── */
+.score-card{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;}
 .score-ring{width:62px;height:62px;flex-shrink:0;position:relative;}
 .score-ring svg{transform:rotate(-90deg);}
-.score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
+.score-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
 .score-info{flex:1;min-width:0;}
-.score-title{font-size:13px;font-weight:600;margin-bottom:3px;}
-.score-sub{font-size:11px;color:var(--muted2);line-height:1.4;}
-.score-segs{display:flex;gap:4px;margin-top:8px;}
-.score-seg{flex:1;height:4px;border-radius:2px;}
+.score-t{font-size:13px;font-weight:600;margin-bottom:3px;}
+.score-s{font-size:11px;color:var(--muted2);line-height:1.4;}
+.score-bars{display:flex;gap:4px;margin-top:8px;}
+.score-bar{flex:1;height:4px;border-radius:2px;}
 
-/* SECTIONS */
+/* ─── INSIGHT ─── */
+.insight{margin:0 16px 12px;background:linear-gradient(135deg,#0D1A10,#091510);border:1px solid var(--border2);border-radius:20px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
+.ins-ico{width:36px;height:36px;background:var(--gdim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ins-t{font-size:13px;font-weight:600;margin-bottom:3px;}
+.ins-s{font-size:11px;color:var(--muted2);line-height:1.5;}
+
+/* ─── SECTION ─── */
 .sec{padding:0 16px 4px;}
-.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.sec-title{font-size:11px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;}
-.sec-link{font-size:12px;color:var(--green);font-weight:500;cursor:pointer;}
+.sec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.sec-t{font-size:11px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;}
+.sec-l{font-size:12px;color:var(--green);font-weight:500;cursor:pointer;}
 
-/* INSIGHT */
-.insight-card{margin:0 16px 12px;background:linear-gradient(135deg,#0D1A10,#091510);border:1px solid var(--border2);border-radius:var(--r);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
-.ins-icon{width:38px;height:38px;background:var(--green-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.ins-title{font-size:13px;font-weight:600;margin-bottom:3px;}
-.ins-text{font-size:11px;color:var(--muted2);line-height:1.5;}
+/* ─── QUICK GRID ─── */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;}
+.qc:active{opacity:0.8;}
+.qc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:9px;}
+.qc-l{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;}
+.qc-v{font-size:18px;font-weight:700;}
+.qc-c{font-size:10px;font-weight:500;margin-top:2px;}
 
-/* TOP GASTOS */
-.tg-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
-.tg-item:last-child{border-bottom:none;}
-.tg-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.tg-info{flex:1;min-width:0;}.tg-name{font-size:13px;font-weight:500;}.tg-sub{font-size:10px;color:var(--muted2);}
-.tg-right{text-align:right;flex-shrink:0;}
-.tg-amt{font-size:13px;font-weight:600;}.tg-pct{font-size:10px;color:var(--muted2);}
-.bar-bg{height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:4px;}
-.bar-fg{height:100%;border-radius:2px;}
+/* ─── TOP GASTOS ─── */
+.tg{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.tg:last-child{border-bottom:none;}
+.tg-ico{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.tg-n{font-size:13px;font-weight:500;}
+.tg-s{font-size:10px;color:var(--muted2);}
+.tg-r{text-align:right;flex-shrink:0;}
+.tg-a{font-size:13px;font-weight:600;}
+.bg{height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:3px;width:72px;}
+.bf{height:100%;border-radius:2px;}
 
-/* TX */
+/* ─── TX ─── */
 .txf-row{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;}
 .txf-row::-webkit-scrollbar{display:none;}
-.txf{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);white-space:nowrap;transition:all 0.15s;font-family:var(--font);}
-.txf.active{background:var(--green);color:#000;border-color:var(--green);}
-.tx-group-lbl{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;padding:12px 0 8px;}
+.txf{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);white-space:nowrap;font-family:var(--font);}
+.txf.on{background:var(--green);color:#000;border-color:var(--green);}
+.tx-glbl{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;padding:12px 0 8px;}
 .tx-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
 .tx-item:last-child{border-bottom:none;}
 .tx-ico{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
-.tx-info{flex:1;min-width:0;}
-.tx-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tx-cat{font-size:11px;color:var(--muted2);}
-.tx-right{text-align:right;flex-shrink:0;}
-.tx-amt{font-size:15px;font-weight:600;}
-.tx-date{font-size:11px;color:var(--muted2);}
+.tx-n{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tx-c{font-size:11px;color:var(--muted2);}
+.tx-a{font-size:15px;font-weight:600;}
+.tx-d{font-size:11px;color:var(--muted2);}
 
-/* METAS */
-.meta-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
-.meta-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
-.meta-title{font-size:15px;font-weight:600;}.meta-emoji{font-size:22px;}
-.meta-amts{font-size:12px;color:var(--muted2);margin-bottom:8px;}
-.meta-amts strong{color:var(--text);font-size:14px;}
-.meta-bar{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;margin-bottom:8px;}
-.meta-bar-fill{height:100%;border-radius:4px;transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);}
-.meta-footer{display:flex;justify-content:space-between;align-items:center;}
-.meta-pct{font-size:12px;font-weight:600;}
-.meta-dl{font-size:11px;color:var(--muted2);}
+/* ─── CARDS ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:12px;}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-title{font-size:15px;font-weight:600;}
+.bar8{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+.bar8-fill{height:100%;border-radius:4px;transition:width 0.5s;}
+.bar5{height:5px;background:var(--card2);border-radius:3px;overflow:hidden;}
+.bar5-fill{height:100%;border-radius:3px;}
+.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.debt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.ds{background:var(--card2);border-radius:12px;padding:10px;text-align:center;}
+.ds-v{font-size:13px;font-weight:700;margin-bottom:2px;}
+.ds-l{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.04em;}
+.debt-acts{display:flex;gap:8px;margin-top:10px;}
+.dab{flex:1;padding:9px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;}
 
-/* DEUDAS */
-.debt-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
-.debt-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
-.debt-name{font-size:15px;font-weight:600;}
-.debt-total{font-size:20px;font-weight:700;color:var(--red);}
-.debt-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-.debt-tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;}
-.debt-bar{height:6px;background:var(--card2);border-radius:3px;overflow:hidden;margin-bottom:10px;}
-.debt-bar-fill{height:100%;border-radius:3px;transition:width 0.5s;}
-.debt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.debt-stat{background:var(--card2);border-radius:12px;padding:10px;text-align:center;}
-.debt-stat-val{font-size:13px;font-weight:700;margin-bottom:2px;}
-.debt-stat-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.04em;}
-.debt-actions{display:flex;gap:8px;margin-top:12px;}
-.debt-act-btn{flex:1;padding:9px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;transition:all 0.15s;}
-.debt-act-btn:active{transform:scale(0.96);}
-
-/* ANÁLISIS */
-.donut-wrap{margin:0 16px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+/* ─── ANÁLISIS ─── */
 .donut-inner{display:flex;gap:16px;align-items:center;}
 .donut-svg{width:120px;height:120px;flex-shrink:0;}
-.donut-legend{flex:1;display:flex;flex-direction:column;gap:8px;}
-.dl-item{display:flex;align-items:center;gap:8px;}
+.dl-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.dl-name{font-size:12px;color:var(--muted2);flex:1;}
-.dl-pct{font-size:12px;font-weight:600;}
-.trend-chart{margin:0 16px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
-.bar-chart{display:flex;gap:6px;align-items:flex-end;height:76px;}
+.dl-n{font-size:12px;color:var(--muted2);flex:1;}
+.dl-p{font-size:12px;font-weight:600;}
+.barchart{display:flex;gap:6px;align-items:flex-end;height:76px;}
 .bc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.bc-bar{width:100%;border-radius:5px 5px 0 0;}
-.bc-lbl{font-size:9px;color:var(--muted2);}
-.pred-card{margin:0 16px 14px;background:linear-gradient(135deg,#0D1520,#091020);border:1px solid rgba(74,158,255,0.2);border-radius:var(--r);padding:18px;display:flex;gap:12px;}
-.pred-icon{width:42px;height:42px;background:var(--blue-dim);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.pred-title{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:4px;}
-.pred-text{font-size:12px;color:var(--muted2);line-height:1.5;}
-.pred-val{font-size:22px;font-weight:700;margin-top:6px;}
+.bc-bar{width:100%;border-radius:4px 4px 0 0;}
+.bc-l{font-size:9px;color:var(--muted2);}
 
-/* PERFIL */
-.profile-hero{margin:12px 16px;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:24px;padding:24px;text-align:center;}
-.prof-avatar{width:72px;height:72px;background:var(--green-dim);border:2px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
-.prof-name{font-size:20px;font-weight:700;margin-bottom:2px;}
-.prof-email{font-size:12px;color:var(--muted2);}
-.settings-list{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.setting-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity 0.15s;}
-.setting-row:last-child{border-bottom:none;}
-.setting-row:active{opacity:0.7;}
-.set-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.set-info{flex:1;}.set-title{font-size:14px;font-weight:500;}.set-sub{font-size:11px;color:var(--muted2);}
-.set-right{font-size:12px;color:var(--muted2);}
-.toggle{width:44px;height:24px;background:var(--green);border-radius:12px;position:relative;cursor:pointer;flex-shrink:0;}
-.toggle-dot{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;right:3px;transition:all 0.2s;}
-
-/* SALARY CONFIG */
-.salary-config{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.sc-header{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;}
-.sc-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);}
-.sc-row:last-child{border-bottom:none;}
-.sc-label{flex:1;font-size:13px;font-weight:500;}
-.sc-input{background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font);font-size:14px;font-weight:600;width:110px;padding:8px 12px;text-align:right;outline:none;}
+/* ─── PERFIL ─── */
+.prof-hero{margin:12px 16px;background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:22px;padding:22px;text-align:center;}
+.prof-av{width:68px;height:68px;background:var(--gdim);border:2px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px;}
+.prof-name{font-size:19px;font-weight:700;margin-bottom:2px;}
+.prof-em{font-size:12px;color:var(--muted2);}
+.slist{margin:0 16px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.srow{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.srow:last-child{border-bottom:none;}
+.srow:active{opacity:0.7;}
+.sico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.sinfo{flex:1;}
+.st{font-size:14px;font-weight:500;}
+.ss{font-size:11px;color:var(--muted2);}
+.sr{font-size:12px;color:var(--muted2);}
+.freq-tog{display:flex;background:var(--card2);border-radius:10px;padding:3px;gap:3px;}
+.fb{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted2);font-family:var(--font);}
+.fb.on{background:var(--green);color:#000;}
+.sc-input{background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font);font-size:14px;font-weight:600;padding:7px 11px;text-align:right;outline:none;width:100px;}
 .sc-input:focus{border-color:var(--green);}
-.freq-toggle{display:flex;background:var(--card2);border-radius:10px;padding:3px;gap:3px;}
-.freq-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted2);font-family:var(--font);transition:all 0.15s;}
-.freq-btn.active{background:var(--green);color:#000;}
 
-/* FAB */
-.fab-wrap{position:absolute;bottom:90px;right:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:40;}
-.fab-menu{display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transition:all 0.2s;transform:translateY(8px);}
-.fab-menu.open{opacity:1;pointer-events:all;transform:translateY(0);}
-.fab-opt{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid rgba(22,199,154,0.2);border-radius:14px;padding:10px 16px;cursor:pointer;white-space:nowrap;}
+/* ─── FAB ─── */
+.fab-wrap{position:absolute;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 12px);right:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:40;}
+.fab-menu{display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transform:translateY(8px);transition:all 0.2s;}
+.fab-menu.on{opacity:1;pointer-events:all;transform:translateY(0);}
+.fab-opt{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border2);border-radius:13px;padding:10px 15px;cursor:pointer;white-space:nowrap;}
 .fab-opt-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
-.fab-opt-lbl{font-size:13px;font-weight:600;}
-.fab-btn{width:54px;height:54px;background:var(--green);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 28px var(--green-glow);border:none;transition:transform 0.25s;}
+.fab-opt-l{font-size:13px;font-weight:600;}
+.fab-btn{width:52px;height:52px;background:var(--green);border-radius:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px var(--gglow);border:none;transition:transform 0.25s;}
 .fab-btn:active{transform:scale(0.92)!important;}
 
-/* MODAL */
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:flex-end;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.2s;}
-.overlay.open{opacity:1;pointer-events:all;}
-.sheet{background:var(--card);border-radius:24px 24px 0 0;padding:24px 20px env(safe-area-inset-bottom,32px);width:100%;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);max-height:92vh;overflow-y:auto;}
-.sheet::-webkit-scrollbar{display:none;}
-.overlay.open .sheet{transform:translateY(0);}
-.sheet-handle{width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 18px;}
-.sheet-title{font-size:20px;font-weight:700;margin-bottom:4px;}
-.sheet-sub{font-size:13px;color:var(--muted2);margin-bottom:18px;}
-.field{margin-bottom:13px;}
-.field-label{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:7px;font-weight:600;}
-.field-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--font);font-size:15px;padding:13px 15px;outline:none;}
-.field-input:focus{border-color:var(--green);}
-.field-select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--font);font-size:14px;padding:13px 15px;outline:none;-webkit-appearance:none;}
-.field-select:focus{border-color:var(--green);}
-.type-toggle{display:flex;background:var(--card2);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px;}
-.type-btn{flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted2);font-family:var(--font);transition:all 0.2s;text-align:center;}
-.type-btn.ing{background:var(--green);color:#000;}
-.type-btn.gas{background:var(--red);color:#fff;}
-.cat-chips{display:flex;flex-wrap:wrap;gap:7px;}
-.cat-chip{padding:7px 12px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--muted2);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;}
-.cat-chip.sel{border-color:var(--green);background:var(--green-dim);color:var(--green);}
-.sheet-btns{display:flex;gap:10px;margin-top:18px;}
-.btn-cancel{flex:1;padding:13px;background:var(--card2);border:1px solid var(--border);border-radius:14px;color:var(--muted2);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;}
-.btn-confirm{flex:2;padding:13px;background:var(--green);border:none;border-radius:14px;color:#000;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;}
-.btn-confirm:active{transform:scale(0.97);}
-.btn-danger{flex:1;padding:13px;background:var(--red-dim);border:1px solid var(--red);border-radius:14px;color:var(--red);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;}
-
-/* EMPTY */
-.empty{text-align:center;padding:40px 20px;color:var(--muted2);}
-.empty-emoji{font-size:38px;margin-bottom:12px;}
-.empty-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
-.empty-sub{font-size:13px;line-height:1.5;}
-
-/* QUICK GRID */
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 14px;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;cursor:pointer;transition:all 0.15s;}
-.qc:active{transform:scale(0.97);}
-.qc-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px;}
-.qc-lbl{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
-.qc-val{font-size:18px;font-weight:700;}
-.qc-chg{font-size:10px;font-weight:600;margin-top:2px;}
-
-@keyframes slideUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-.balance-card{animation:slideUp 0.4s ease both;}
-/* SPLASH */
-#splash{position:fixed;inset:0;background:#0B0F14;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-#splash.hide{animation:splashOut 0.7s ease forwards;}
-@keyframes splashOut{0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(1.05);pointer-events:none;}}
-.sp-logo{opacity:0;transform:scale(0.65);animation:logoIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s forwards;}
-@keyframes logoIn{to{opacity:1;transform:scale(1);}}
-.sp-name{opacity:0;animation:spFadeUp 0.5s ease 0.85s forwards;font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;letter-spacing:0.14em;color:#E6E8EA;margin-top:22px;}
-.sp-tag{opacity:0;animation:spFadeUp 0.5s ease 1.05s forwards;font-family:'Poppins',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.22em;color:#16C79A;margin-top:8px;text-transform:uppercase;}
-.sp-bar-wrap{opacity:0;animation:spFadeUp 0.5s ease 1.25s forwards;margin-top:52px;width:100px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
-.sp-bar{height:100%;width:0;background:#16C79A;border-radius:2px;animation:spLoad 1s ease 1.3s forwards;}
-@keyframes spLoad{to{width:100%;}}
-@keyframes spFadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-/* SUGERENCIAS BTN */
-.sug-btn{position:absolute;bottom:92px;left:16px;width:44px;height:44px;background:var(--card);border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:39;transition:all 0.2s;}
+/* ─── SUG BTN ─── */
+.sug-btn{position:absolute;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 12px);left:16px;width:44px;height:44px;background:var(--card);border:1px solid var(--border2);border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:40;}
 .sug-btn:active{transform:scale(0.92);}
-.sug-dot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;background:var(--green);border-radius:50%;font-size:8px;font-weight:700;color:#000;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
-.sug-chip{padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--muted2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:var(--font);transition:all 0.15s;}
-.sug-chip.sel{background:var(--green-dim);color:var(--green);border-color:var(--green);}
+
+/* ─── SHEET ─── */
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,0.82);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.overlay.on{opacity:1;pointer-events:all;}
+.sheet{background:var(--card);border-radius:22px 22px 0 0;padding:22px 20px 36px;width:100%;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.overlay.on .sheet{transform:translateY(0);}
+.sh-handle{width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 18px;}
+.sh-title{font-size:19px;font-weight:700;margin-bottom:4px;}
+.sh-sub{font-size:13px;color:var(--muted2);margin-bottom:16px;}
+.field{margin-bottom:12px;}
+.fl{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:7px;font-weight:600;}
+.fi{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:13px;color:var(--text);font-family:var(--font);font-size:15px;padding:13px 14px;outline:none;}
+.fi:focus{border-color:var(--green);}
+.type-tog{display:flex;background:var(--card2);border-radius:12px;padding:4px;gap:4px;margin-bottom:13px;}
+.tb{flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted2);font-family:var(--font);text-align:center;}
+.tb.ing{background:var(--green);color:#000;}
+.tb.gas{background:var(--red);color:#fff;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{padding:7px 12px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--muted2);font-size:11px;font-weight:600;cursor:pointer;}
+.chip.on{border-color:var(--green);background:var(--gdim);color:var(--green);}
+.sh-btns{display:flex;gap:10px;margin-top:16px;}
+.btn-x{flex:1;padding:13px;background:var(--card2);border:1px solid var(--border);border-radius:13px;color:var(--muted2);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;}
+.btn-ok{flex:2;padding:13px;background:var(--green);border:none;border-radius:13px;color:#000;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;}
+.btn-ok:active{transform:scale(0.97);}
+
+/* ─── EMPTY ─── */
+.empty{text-align:center;padding:40px 20px;color:var(--muted2);}
+.empty-e{font-size:36px;margin-bottom:12px;}
+.empty-t{font-size:15px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.empty-s{font-size:13px;line-height:1.5;}
+
+/* ─── SUGERENCIAS ─── */
+.sug-chip{padding:8px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--muted2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:var(--font);}
+.sug-chip.on{background:var(--gdim);color:var(--green);border-color:var(--green);}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="shell">
 
-<!-- SPLASH SCREEN -->
-<div id="splash">
-  <div class="sp-logo">
-    <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="110" height="110" rx="26" fill="#0B0F14"/>
-      <defs>
-        <linearGradient id="ng" x1="22" y1="18" x2="88" y2="92" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#22F0B8"/>
-          <stop offset="100%" stop-color="#0C9B6E"/>
-        </linearGradient>
-        <filter id="glow2"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <g filter="url(#glow2)">
-        <line x1="24" y1="18" x2="24" y2="92" stroke="url(#ng)" stroke-width="11" stroke-linecap="round"/>
-        <line x1="24" y1="18" x2="86" y2="92" stroke="url(#ng)" stroke-width="11" stroke-linecap="round"/>
-        <line x1="86" y1="18" x2="86" y2="92" stroke="url(#ng)" stroke-width="11" stroke-linecap="round"/>
-      </g>
-    </svg>
-  </div>
-  <div class="sp-name">NEXUM</div>
-  <div class="sp-tag">Conecta · Controla · Crece</div>
-  <div class="sp-bar-wrap"><div class="sp-bar"></div></div>
-</div>
-
-<!-- PAYWALL -->
-<div id="paywall" class="paywall">
-  <div class="pw-logo">
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-      <defs>
-        <linearGradient id="pwg" x1="10" y1="8" x2="46" y2="48" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#22F0B8"/><stop offset="100%" stop-color="#0C9B6E"/>
-        </linearGradient>
-      </defs>
-      <line x1="11" y1="8" x2="11" y2="48" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
-      <line x1="11" y1="8" x2="45" y2="48" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
-      <line x1="45" y1="8" x2="45" y2="48" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
-    </svg>
-  </div>
-  <div class="pw-title">Nexum</div>
-  <div class="pw-tagline">Conecta. Controla. Crece.<br>Tu aliado financiero personal.</div>
-  <div class="pw-features">
-    <div class="pw-feature"><div class="pw-feat-icon">📊</div><div><div class="pw-feat-text">Dashboard inteligente</div><div class="pw-feat-sub">Saldo, gastos, ahorro en tiempo real</div></div></div>
-    <div class="pw-feature"><div class="pw-feat-icon">💳</div><div><div class="pw-feat-text">Seguimiento de deudas</div><div class="pw-feat-sub">Bola de nieve + proyección de liquidación</div></div></div>
-    <div class="pw-feature"><div class="pw-feat-icon">🎯</div><div><div class="pw-feat-text">Metas de ahorro</div><div class="pw-feat-sub">Con sugerencias automáticas</div></div></div>
-    <div class="pw-feature"><div class="pw-feat-icon">🧠</div><div><div class="pw-feat-text">Insights automáticos</div><div class="pw-feat-sub">Score financiero Nexum (0–100)</div></div></div>
-  </div>
-  <div class="pw-price-box">
-    <div class="pw-price-main">$0.80</div>
-    <div class="pw-price-sub">Pago único · Acceso completo para siempre</div>
-    <div class="pw-price-tag">🔥 Sin suscripción · Sin renovaciones</div>
-  </div>
-  <button class="pw-btn" onclick="unlockApp()">Desbloquear Nexum — $0.80</button>
-  <div class="pw-skip" onclick="unlockApp()">Continuar con versión demo (limitada)</div>
-</div>
-
-<!-- APP MAIN -->
-<div id="app-main" class="app-main-hidden">
-<div class="scroll" id="scroll">
-
-  <!-- ══ INICIO ══ -->
-  <div class="tab active" id="tab-inicio">
-    <div class="hdr">
-      <div><div class="hdr-greeting" id="hdr-greeting">Hola 👋</div><div class="hdr-name" id="hdr-name">Enrique</div></div>
-      <div class="notif-btn" onclick="showNotifs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><div class="notif-dot" id="notif-dot"></div></div>
+  <!-- ═══ SPLASH ═══ -->
+  <div id="splash">
+    <div class="sp-logo">
+      <svg width="108" height="108" viewBox="0 0 108 108" fill="none">
+        <rect width="108" height="108" rx="24" fill="#0B0F14"/>
+        <defs>
+          <linearGradient id="ng" x1="22" y1="16" x2="86" y2="92" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#22F0B8"/>
+            <stop offset="100%" stop-color="#0C9B6E"/>
+          </linearGradient>
+        </defs>
+        <line x1="24" y1="17" x2="24" y2="91" stroke="url(#ng)" stroke-width="12" stroke-linecap="round"/>
+        <line x1="24" y1="17" x2="84" y2="91" stroke="url(#ng)" stroke-width="12" stroke-linecap="round"/>
+        <line x1="84" y1="17" x2="84" y2="91" stroke="url(#ng)" stroke-width="12" stroke-linecap="round"/>
+      </svg>
     </div>
-    <div class="balance-card">
-      <div class="bal-glow"></div>
-      <div class="bal-label">Saldo disponible</div>
-      <div class="bal-amount"><span class="sym">$</span><span id="bal-main">0.00</span></div>
-      <div class="bal-trend" id="bal-trend">↑ 0%</div>
-      <div class="bal-stats">
-        <div class="bsi"><div class="bsi-val" style="color:var(--green);" id="bs-ing">$0</div><div class="bsi-lbl">Ingresos</div></div>
-        <div class="bsd"></div>
-        <div class="bsi"><div class="bsi-val" style="color:var(--red);" id="bs-gas">$0</div><div class="bsi-lbl">Gastos</div></div>
-        <div class="bsd"></div>
-        <div class="bsi"><div class="bsi-val" style="color:var(--amber);" id="bs-deu">$0</div><div class="bsi-lbl">Deudas</div></div>
+    <div class="sp-name">NEXUM</div>
+    <div class="sp-tag">Conecta · Controla · Crece</div>
+    <div class="sp-bar"><div class="sp-bar-fill"></div></div>
+  </div>
+
+  <!-- ═══ PAYWALL ═══ -->
+  <div id="paywall" style="display:none;">
+    <div class="pw-logo">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <defs><linearGradient id="pwg" x1="10" y1="8" x2="42" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#22F0B8"/><stop offset="100%" stop-color="#0C9B6E"/></linearGradient></defs>
+        <line x1="10" y1="8" x2="10" y2="44" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
+        <line x1="10" y1="8" x2="42" y2="44" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
+        <line x1="42" y1="8" x2="42" y2="44" stroke="url(#pwg)" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="pw-title">Nexum</div>
+    <div class="pw-sub">Conecta. Controla. Crece.<br>Tu aliado financiero personal.</div>
+    <div class="pw-feat">
+      <div class="pw-fi"><div class="pw-fi-ico">📊</div><div><div class="pw-fi-t">Dashboard inteligente</div><div class="pw-fi-s">Saldo, gastos, ahorro en tiempo real</div></div></div>
+      <div class="pw-fi"><div class="pw-fi-ico">💳</div><div><div class="pw-fi-t">Seguimiento de deudas</div><div class="pw-fi-s">Bola de nieve + proyección</div></div></div>
+      <div class="pw-fi"><div class="pw-fi-ico">🎯</div><div><div class="pw-fi-t">Metas de ahorro</div><div class="pw-fi-s">Con sugerencias automáticas</div></div></div>
+      <div class="pw-fi"><div class="pw-fi-ico">🧠</div><div><div class="pw-fi-t">Insights automáticos</div><div class="pw-fi-s">Score financiero Nexum (0–100)</div></div></div>
+    </div>
+    <div class="pw-price">
+      <div class="pw-price-n">$0.80</div>
+      <div class="pw-price-s">Pago único · Acceso completo para siempre</div>
+      <div class="pw-price-tag">🔥 Sin suscripción · Sin renovaciones</div>
+    </div>
+    <button class="pw-btn" onclick="unlock()">Desbloquear Nexum — $0.80</button>
+    <div class="pw-skip" onclick="unlock()">Continuar en modo demo</div>
+  </div>
+
+  <!-- ═══ MAIN APP ═══ -->
+  <div id="main">
+
+    <!-- SCROLL AREA -->
+    <div id="content">
+
+      <!-- INICIO -->
+      <div class="tab on" id="t-inicio">
+        <div class="hdr">
+          <div><div class="hdr-hi" id="hdr-hi">Hola 👋</div><div class="hdr-name" id="hdr-name">Enrique</div></div>
+          <div class="notif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><div class="notif-dot"></div></div>
+        </div>
+        <div class="bal-card">
+          <div class="bal-glow"></div>
+          <div class="bal-lbl">Saldo disponible</div>
+          <div class="bal-amt"><span class="bal-sym">$</span><span id="bal-n">0.00</span></div>
+          <div class="bal-trend" id="bal-t">↑ 0%</div>
+          <div class="bal-stats">
+            <div class="bsi"><div class="bsi-v" style="color:var(--green);" id="bs-i">$0</div><div class="bsi-l">Ingresos</div></div>
+            <div class="bsd"></div>
+            <div class="bsi"><div class="bsi-v" style="color:var(--red);" id="bs-g">$0</div><div class="bsi-l">Gastos</div></div>
+            <div class="bsd"></div>
+            <div class="bsi"><div class="bsi-v" style="color:var(--amber);" id="bs-d">$0</div><div class="bsi-l">Deudas</div></div>
+          </div>
+        </div>
+        <div class="score-card">
+          <div class="score-ring">
+            <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="25" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6"/><circle id="sc-arc" cx="31" cy="31" r="25" fill="none" stroke="#16C79A" stroke-width="6" stroke-dasharray="157" stroke-dashoffset="80" stroke-linecap="round" transform="rotate(-90 31 31)"/></svg>
+            <div class="score-n" id="sc-n">--</div>
+          </div>
+          <div class="score-info">
+            <div class="score-t">Score Nexum — <span id="sc-lbl">...</span></div>
+            <div class="score-s" id="sc-s">Calculando...</div>
+            <div class="score-bars" id="sc-bars"></div>
+          </div>
+        </div>
+        <div class="insight">
+          <div class="ins-ico">🧠</div>
+          <div><div class="ins-t">Insight del día</div><div class="ins-s" id="ins-s">Analizando tus finanzas...</div></div>
+        </div>
+        <div class="sec"><div class="sec-h"><span class="sec-t">Resumen</span></div><div class="qgrid" id="qg"></div></div>
+        <div class="sec"><div class="sec-h"><span class="sec-t">Top gastos</span><span class="sec-l" onclick="go('movimientos')">Ver todos →</span></div><div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 16px;" id="tg"></div></div>
+        <div style="height:12px;"></div>
+        <div style="margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span style="font-size:13px;font-weight:600;">Evolución</span><span style="font-size:11px;color:var(--muted2);">6 meses</span></div><div class="barchart" id="hbars"></div></div>
       </div>
-    </div>
-    <div class="score-card">
-      <div class="score-ring">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="25" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/><circle id="score-arc" cx="31" cy="31" r="25" fill="none" stroke="#16C79A" stroke-width="6" stroke-dasharray="157" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 31 31)"/></svg>
-        <div class="score-num" id="score-num">--</div>
+
+      <!-- MOVIMIENTOS -->
+      <div class="tab" id="t-movimientos">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Historial</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Movimientos</div></div>
+        <div class="txf-row">
+          <button class="txf on" onclick="ftx('todo',this)">Todo</button>
+          <button class="txf" onclick="ftx('ingreso',this)">💚 Ingresos</button>
+          <button class="txf" onclick="ftx('gasto',this)">❤️ Gastos</button>
+          <button class="txf" onclick="ftx('Comida',this)">🍔 Comida</button>
+          <button class="txf" onclick="ftx('Transporte',this)">🚗 Transp.</button>
+          <button class="txf" onclick="ftx('Vivienda',this)">🏠 Vivienda</button>
+        </div>
+        <div style="padding:0 16px;" id="txlist"></div>
       </div>
-      <div class="score-info">
-        <div class="score-title">Score Nexum — <span id="score-lbl">...</span></div>
-        <div class="score-sub" id="score-sub">Calculando tu salud financiera...</div>
-        <div class="score-segs" id="score-segs"></div>
+
+      <!-- METAS -->
+      <div class="tab" id="t-metas">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Ahorro</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Mis Metas</div></div>
+        <div style="padding:0 16px;" id="metaslist"></div>
+        <div style="padding:0 16px 12px;"><button style="width:100%;padding:13px;background:transparent;border:1px dashed var(--border2);border-radius:13px;color:var(--green);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;" onclick="openSheet('meta')">+ Nueva meta</button></div>
       </div>
-    </div>
-    <div class="insight-card">
-      <div class="ins-icon">🧠</div>
-      <div><div class="ins-title">Insight del día</div><div class="ins-text" id="insight-text">Analizando tus finanzas...</div></div>
-    </div>
-    <div class="sec">
-      <div class="sec-hdr"><span class="sec-title">Resumen</span></div>
-      <div class="quick-grid" id="home-quick"></div>
-    </div>
-    <div class="sec">
-      <div class="sec-hdr"><span class="sec-title">Top gastos</span><span class="sec-link" onclick="switchTab('movimientos')">Ver todos →</span></div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:4px 16px;" id="top-gastos"></div>
-    </div>
-    <div style="height:14px;"></div>
-    <div style="margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span style="font-size:13px;font-weight:600;">Evolución</span><span style="font-size:11px;color:var(--muted2);">6 meses</span></div>
-      <div class="bar-chart" id="home-bars"></div>
-    </div>
-  </div>
 
-  <!-- ══ MOVIMIENTOS ══ -->
-  <div class="tab" id="tab-movimientos">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Historial</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Movimientos</div></div>
-    <div class="txf-row" id="tx-filters">
-      <button class="txf active" onclick="filterTx('todo',this)">Todo</button>
-      <button class="txf" onclick="filterTx('ingreso',this)">💚 Ingresos</button>
-      <button class="txf" onclick="filterTx('gasto',this)">❤️ Gastos</button>
-      <button class="txf" onclick="filterTx('Comida',this)">🍔 Comida</button>
-      <button class="txf" onclick="filterTx('Transporte',this)">🚗 Transp.</button>
-      <button class="txf" onclick="filterTx('Vivienda',this)">🏠 Vivienda</button>
-    </div>
-    <div style="padding:0 16px;" id="tx-list"></div>
-  </div>
-
-  <!-- ══ METAS ══ -->
-  <div class="tab" id="tab-metas">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Ahorro</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Mis Metas</div></div>
-    <div style="padding:0 16px;" id="metas-list"></div>
-    <div style="padding:0 16px 12px;"><button style="width:100%;padding:13px;background:transparent;border:1px dashed var(--border2);border-radius:14px;color:var(--green);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;" onclick="openSheet('meta')">+ Nueva meta</button></div>
-  </div>
-
-  <!-- ══ DEUDAS ══ -->
-  <div class="tab" id="tab-deudas">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Liquidación</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Deudas</div></div>
-    <div style="margin:0 16px 12px;background:linear-gradient(135deg,#1A0808,#120505);border:1px solid rgba(255,77,106,0.2);border-radius:var(--r);padding:16px;">
-      <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Deuda total</div>
-      <div style="font-size:36px;font-weight:700;color:var(--red);margin-bottom:4px;" id="debt-total">$0.00</div>
-      <div style="font-size:12px;color:var(--muted2);" id="debt-months-label">Calculando...</div>
-    </div>
-    <div style="padding:0 16px;" id="debt-list"></div>
-    <div style="padding:0 16px 12px;"><button style="width:100%;padding:13px;background:transparent;border:1px dashed rgba(255,77,106,0.3);border-radius:14px;color:var(--red);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;" onclick="openSheet('deuda')">+ Nueva deuda</button></div>
-  </div>
-
-  <!-- ══ ANÁLISIS ══ -->
-  <div class="tab" id="tab-analisis">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Inteligencia</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Análisis</div></div>
-    <div class="donut-wrap">
-      <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Gastos por categoría</div>
-      <div class="donut-inner"><svg class="donut-svg" viewBox="0 0 120 120" id="donut-svg"></svg><div class="donut-legend" id="donut-legend"></div></div>
-    </div>
-    <div class="trend-chart">
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span style="font-size:13px;font-weight:600;">Gastos mensuales</span><span style="font-size:11px;color:var(--muted2);">6 meses</span></div>
-      <div class="bar-chart" id="analisis-bars"></div>
-    </div>
-    <div class="pred-card">
-      <div class="pred-icon">🔮</div>
-      <div><div class="pred-title">Predicción Nexum</div><div class="pred-text" id="pred-text">Calculando...</div><div class="pred-val" id="pred-val">$0</div></div>
-    </div>
-    <div style="margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;" id="analisis-cats"></div>
-  </div>
-
-  <!-- ══ PERFIL ══ -->
-  <div class="tab" id="tab-perfil">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Cuenta</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Perfil</div></div>
-    <div class="profile-hero">
-      <div class="prof-avatar">👤</div>
-      <div class="prof-name" id="prof-name">Enrique</div>
-      <div class="prof-email">nexum@finanzas.app</div>
-      <div style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:10px;" id="prof-badge">⭐ Nexum Pro</div>
-    </div>
-
-    <!-- SALARY CONFIG -->
-    <div class="sec" style="padding-bottom:8px;"><div class="sec-hdr"><span class="sec-title">Configurar salario</span></div></div>
-    <div class="salary-config">
-      <div class="sc-header">💰 Mis ingresos</div>
-      <div class="sc-row">
-        <span class="sc-label">Mi nombre</span>
-        <input class="sc-input" id="sc-nombre" type="text" placeholder="Tu nombre" style="width:140px;text-align:left;" onchange="saveProfile()">
+      <!-- DEUDAS -->
+      <div class="tab" id="t-deudas">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Liquidación</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Deudas</div></div>
+        <div style="margin:0 16px 12px;background:linear-gradient(135deg,#1A0808,#120505);border:1px solid rgba(255,77,106,0.2);border-radius:20px;padding:16px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Deuda total</div><div style="font-size:36px;font-weight:700;color:var(--red);margin-bottom:4px;" id="d-total">$0.00</div><div style="font-size:12px;color:var(--muted2);" id="d-months">Calculando...</div></div>
+        <div style="padding:0 16px;" id="deudaslist"></div>
+        <div style="padding:0 16px 12px;"><button style="width:100%;padding:13px;background:transparent;border:1px dashed rgba(255,77,106,0.3);border-radius:13px;color:var(--red);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;" onclick="openSheet('deuda')">+ Nueva deuda</button></div>
       </div>
-      <div class="sc-row">
-        <span class="sc-label">Frecuencia</span>
-        <div class="freq-toggle">
-          <button class="freq-btn active" id="freq-q" onclick="setFreq('quincenal')">Quincenal</button>
-          <button class="freq-btn" id="freq-m" onclick="setFreq('mensual')">Mensual</button>
+
+      <!-- ANÁLISIS -->
+      <div class="tab" id="t-analisis">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Inteligencia</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Análisis</div></div>
+        <div style="margin:0 16px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Gastos por categoría</div>
+          <div class="donut-inner"><svg class="donut-svg" viewBox="0 0 120 120" id="donut"></svg><div id="donut-leg"></div></div>
+        </div>
+        <div style="margin:0 16px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span style="font-size:13px;font-weight:600;">Gastos mensuales</span><span style="font-size:11px;color:var(--muted2);">6 meses</span></div>
+          <div class="barchart" id="abars"></div>
+        </div>
+        <div style="margin:0 16px 14px;background:linear-gradient(135deg,#0D1520,#091020);border:1px solid rgba(74,158,255,0.2);border-radius:20px;padding:18px;display:flex;gap:12px;">
+          <div style="width:42px;height:42px;background:var(--bdim);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔮</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--blue);margin-bottom:4px;">Predicción Nexum</div><div style="font-size:12px;color:var(--muted2);line-height:1.5;" id="pred-t">Calculando...</div><div style="font-size:22px;font-weight:700;margin-top:6px;" id="pred-v">$0</div></div>
+        </div>
+        <div style="margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;" id="acats"></div>
+      </div>
+
+      <!-- PERFIL -->
+      <div class="tab" id="t-perfil">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Cuenta</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Perfil</div></div>
+        <div class="prof-hero"><div class="prof-av">👤</div><div class="prof-name" id="p-name">Enrique</div><div class="prof-em">nexum@finanzas.app</div><div style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:9px;">⭐ Nexum Pro</div></div>
+        <div class="sec" style="padding-bottom:8px;"><div class="sec-h"><span class="sec-t">Configurar salario</span></div></div>
+        <div class="slist">
+          <div class="srow"><span class="sinfo"><span class="st">Mi nombre</span></span><input class="sc-input" id="sc-nom" type="text" placeholder="Tu nombre" style="text-align:left;width:130px;" onchange="saveProf()"></div>
+          <div class="srow"><span class="sinfo"><span class="st">Frecuencia</span></span><div class="freq-tog"><button class="fb on" id="fb-q" onclick="setFreq('quincenal')">Quincenal</button><button class="fb" id="fb-m" onclick="setFreq('mensual')">Mensual</button></div></div>
+          <div class="srow"><span class="sinfo"><span class="st" id="sal-lbl">Monto por quincena</span></span><input class="sc-input" id="sc-sal" type="number" inputmode="decimal" placeholder="0.00" onchange="saveSal()"></div>
+          <div class="srow" style="background:var(--card2);"><span class="sinfo"><span class="ss">Ingreso mensual</span></span><span style="font-size:14px;font-weight:700;color:var(--green);" id="sc-mo">$0.00</span></div>
+        </div>
+        <div class="sec" style="padding-top:8px;padding-bottom:8px;"><div class="sec-h"><span class="sec-t">Configuración</span></div></div>
+        <div class="slist">
+          <div class="srow"><div class="sico" style="background:var(--gdim);">💱</div><div class="sinfo"><div class="st">Moneda</div><div class="ss">Dólar (USD)</div></div><span class="sr">USD</span></div>
+          <div class="srow"><div class="sico" style="background:var(--bdim);">🌙</div><div class="sinfo"><div class="st">Modo oscuro</div><div class="ss">Activo por defecto</div></div><span class="sr">●</span></div>
+          <div class="srow" onclick="go('sugerencias')"><div class="sico" style="background:var(--gdim);">💬</div><div class="sinfo"><div class="st">Buzón de sugerencias</div><div class="ss">Envía tu feedback</div></div><span class="sr">→</span></div>
+        </div>
+        <div style="margin:8px 16px 12px;background:linear-gradient(135deg,#1A0E2A,#12091E);border:1px solid rgba(155,114,255,0.2);border-radius:20px;padding:18px;"><div style="font-size:16px;font-weight:700;margin-bottom:6px;">Nexum Pro ⭐</div><div style="font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:12px;">Acceso completo activo. Sin suscripción ni renovaciones.</div><div style="background:var(--gdim);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--green);text-align:center;">✓ Pago único $0.80 — Activo</div></div>
+        <div class="slist" style="margin-bottom:20px;"><div class="srow" onclick="clearData()"><div class="sico" style="background:var(--rdim);">🗑️</div><div class="sinfo"><div class="st" style="color:var(--red);">Borrar todos los datos</div><div class="ss">Reinicia la app</div></div><span class="sr">→</span></div></div>
+        <div style="height:8px;"></div>
+      </div>
+
+      <!-- SUGERENCIAS -->
+      <div class="tab" id="t-sugerencias">
+        <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Comunidad</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Sugerencias</div></div>
+        <div style="padding:0 16px;">
+          <div style="background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:20px;padding:14px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;">
+            <div style="font-size:22px;">💬</div><div><div style="font-size:13px;font-weight:600;margin-bottom:3px;">Tu opinión mejora Nexum</div><div style="font-size:12px;color:var(--muted2);line-height:1.5;">Reporta errores, pide funciones o cuéntanos qué piensas.</div></div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:12px;">
+            <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:10px;">Tipo</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="sug-types">
+              <button class="sug-chip on" onclick="setSugT('💡 Sugerencia',this)">💡 Sugerencia</button>
+              <button class="sug-chip" onclick="setSugT('🐛 Bug',this)">🐛 Bug</button>
+              <button class="sug-chip" onclick="setSugT('✨ Función',this)">✨ Función</button>
+              <button class="sug-chip" onclick="setSugT('💬 Comentario',this)">💬 Comentario</button>
+            </div>
+            <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:8px;">Mensaje</div>
+            <textarea id="sug-txt" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:13px;color:var(--text);font-family:var(--font);font-size:14px;padding:12px 14px;outline:none;resize:none;height:100px;line-height:1.5;" placeholder="Escribe tu sugerencia..."></textarea>
+            <button onclick="saveSug()" style="width:100%;margin-top:10px;padding:13px;background:var(--green);border:none;border-radius:13px;color:#000;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;">Enviar</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:10px;" id="sug-cnt">Sin sugerencias</div>
+          <div id="suglist"></div>
         </div>
       </div>
-      <div class="sc-row">
-        <span class="sc-label" id="salary-label">Monto por quincena</span>
-        <input class="sc-input" id="sc-salary" type="number" inputmode="decimal" placeholder="0.00" onchange="saveSalary()">
+
+    </div><!-- /content -->
+
+    <!-- FAB -->
+    <div class="fab-wrap" id="fabwrap">
+      <div class="fab-menu" id="fabmenu">
+        <div class="fab-opt" onclick="openSheet('ingreso')"><div class="fab-opt-ico" style="background:var(--gdim);">💚</div><span class="fab-opt-l" style="color:var(--green);">Agregar ingreso</span></div>
+        <div class="fab-opt" onclick="openSheet('gasto')"><div class="fab-opt-ico" style="background:var(--rdim);">❤️</div><span class="fab-opt-l" style="color:var(--red);">Agregar gasto</span></div>
       </div>
-      <div class="sc-row" style="border-bottom:none;background:var(--card2);">
-        <span class="sc-label" style="color:var(--muted2);">Ingreso mensual calculado</span>
-        <span style="font-size:14px;font-weight:700;color:var(--green);" id="sc-monthly">$0.00</span>
-      </div>
+      <button class="fab-btn" id="fabbtn" onclick="togFab()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="#000" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
     </div>
 
-    <div class="sec" style="padding-top:4px;padding-bottom:8px;"><div class="sec-hdr"><span class="sec-title">Configuración</span></div></div>
-    <div class="settings-list">
-      <div class="setting-row"><div class="set-icon" style="background:var(--green-dim);">💱</div><div class="set-info"><div class="set-title">Moneda</div><div class="set-sub">Dólar (USD)</div></div><div class="set-right">USD</div></div>
-      <div class="setting-row"><div class="set-icon" style="background:var(--blue-dim);">🌙</div><div class="set-info"><div class="set-title">Modo oscuro</div><div class="set-sub">Activo por defecto</div></div><div class="toggle"><div class="toggle-dot"></div></div></div>
-      <div class="setting-row"><div class="set-icon" style="background:var(--purple-dim);">🔔</div><div class="set-info"><div class="set-title">Notificaciones</div><div class="set-sub">Alertas de presupuesto</div></div><div class="set-right">→</div></div>
+    <!-- SUG BTN -->
+    <div class="sug-btn" id="sugbtn" onclick="go('sugerencias')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16C79A" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
 
-    <div style="margin:8px 16px 12px;background:linear-gradient(135deg,#1A0E2A,#12091E);border:1px solid rgba(155,114,255,0.2);border-radius:var(--r);padding:18px;">
-      <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Nexum Pro ⭐</div>
-      <div style="font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:14px;">Ya tienes acceso completo. Análisis avanzados, metas ilimitadas, deudas ilimitadas e insights inteligentes.</div>
-      <div style="background:var(--green-dim);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--green);text-align:center;">✓ Acceso Pro activo — Pago único $0.80</div>
+    <!-- NAV -->
+    <div id="nav">
+      <button class="nb on" id="nb-inicio" onclick="go('inicio')"><svg viewBox="0 0 24 24"><path d="M3 12L12 4L21 12V21H15V15H9V21H3V12Z" stroke-linejoin="round"/></svg><span>Inicio</span></button>
+      <button class="nb" id="nb-movimientos" onclick="go('movimientos')"><svg viewBox="0 0 24 24"><path d="M8 6l4-4 4 4M8 18l4 4 4-4M4 12h16" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Movim.</span></button>
+      <button class="nb" id="nb-metas" onclick="go('metas')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Metas</span></button>
+      <button class="nb" id="nb-deudas" onclick="go('deudas')"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4" stroke-linecap="round"/></svg><span>Deudas</span></button>
+      <button class="nb" id="nb-analisis" onclick="go('analisis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" stroke-linecap="round"/></svg><span>Análisis</span></button>
+      <button class="nb" id="nb-perfil" onclick="go('perfil')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/></svg><span>Perfil</span></button>
     </div>
 
-    <div class="settings-list" style="margin-bottom:16px;">
-      <div class="setting-row" onclick="clearData()"><div class="set-icon" style="background:var(--red-dim);">🗑️</div><div class="set-info"><div class="set-title" style="color:var(--red);">Borrar todos los datos</div><div class="set-sub">Reinicia la app completamente</div></div><div class="set-right">→</div></div>
-    </div>
-    <div style="height:8px;"></div>
-  </div>
-
-  <!-- ══ SUGERENCIAS ══ -->
-  <div class="tab" id="tab-sugerencias">
-    <div style="padding:20px 20px 4px;"><div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Comunidad</div><div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-top:2px;">Buzón de Sugerencias</div></div>
-    <div style="padding:0 16px 12px;">
-      <div style="background:linear-gradient(135deg,#0D1A14,#0B1720);border:1px solid var(--border2);border-radius:var(--r);padding:16px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;">
-        <div style="font-size:22px;flex-shrink:0;">💬</div>
-        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px;">Tu opinión mejora Nexum</div><div style="font-size:12px;color:var(--muted2);line-height:1.5;">Reporta errores, pide funciones nuevas o simplemente cuéntanos qué piensas.</div></div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;">
-        <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:10px;">Tipo</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="sug-types">
-          <button class="sug-chip sel" onclick="setSugType('💡 Sugerencia',this)">💡 Sugerencia</button>
-          <button class="sug-chip" onclick="setSugType('🐛 Bug',this)">🐛 Bug</button>
-          <button class="sug-chip" onclick="setSugType('✨ Nueva función',this)">✨ Nueva función</button>
-          <button class="sug-chip" onclick="setSugType('💬 Comentario',this)">💬 Comentario</button>
+    <!-- SHEET MODAL -->
+    <div class="overlay" id="overlay" onclick="closeOv(event)">
+      <div class="sheet" onclick="event.stopPropagation()">
+        <div class="sh-handle"></div>
+        <div class="sh-title" id="sh-t">Nuevo</div>
+        <div class="sh-sub" id="sh-s"></div>
+        <div id="f-tx" style="display:none;">
+          <div class="type-tog"><div class="tb" id="tb-i" onclick="setTT('ingreso')">💚 Ingreso</div><div class="tb" id="tb-g" onclick="setTT('gasto')">❤️ Gasto</div></div>
+          <div class="field"><div class="fl">Descripción</div><input class="fi" id="tx-n" type="text" placeholder="Ej: Supermercado..."></div>
+          <div class="field"><div class="fl">Monto ($)</div><input class="fi" id="tx-a" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+          <div class="field"><div class="fl">Categoría</div><div class="chips" id="chips"></div></div>
         </div>
-        <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:8px;">Tu mensaje</div>
-        <textarea id="sug-text" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--font);font-size:14px;padding:13px 15px;outline:none;resize:none;height:110px;line-height:1.5;" placeholder="Escribe tu sugerencia aquí..."></textarea>
-        <button onclick="saveSugerencia()" style="width:100%;margin-top:10px;padding:13px;background:var(--green);border:none;border-radius:14px;color:#000;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;">Enviar sugerencia</button>
+        <div id="f-meta" style="display:none;">
+          <div class="field"><div class="fl">Nombre de la meta</div><input class="fi" id="me-n" type="text" placeholder="Ej: Viaje a México..."></div>
+          <div class="field"><div class="fl">Objetivo ($)</div><input class="fi" id="me-o" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+          <div class="field"><div class="fl">Ya ahorrado ($)</div><input class="fi" id="me-a" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+          <div class="field"><div class="fl">Fecha objetivo</div><input class="fi" id="me-f" type="date"></div>
+        </div>
+        <div id="f-deuda" style="display:none;">
+          <div class="field"><div class="fl">Nombre (ej: Tarjeta Visa)</div><input class="fi" id="de-n" type="text" placeholder="Banco o nombre..."></div>
+          <div class="field"><div class="fl">Saldo total ($)</div><input class="fi" id="de-t" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+          <div class="field"><div class="fl">Tasa de interés mensual (%)</div><input class="fi" id="de-r" type="number" step="0.1" inputmode="decimal" placeholder="2.5"></div>
+          <div class="field"><div class="fl">Pago mínimo mensual ($)</div><input class="fi" id="de-m" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+        </div>
+        <div id="f-abono" style="display:none;">
+          <div style="margin-bottom:13px;background:var(--card2);border-radius:13px;padding:13px;"><div style="font-size:13px;font-weight:600;" id="ab-n">Deuda</div><div style="font-size:12px;color:var(--muted2);margin-top:2px;" id="ab-b">$0</div></div>
+          <div class="field"><div class="fl">Monto del abono ($)</div><input class="fi" id="ab-a" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+        </div>
+        <div class="sh-btns"><button class="btn-x" onclick="closeSheet()">Cancelar</button><button class="btn-ok" onclick="saveSheet()">Guardar</button></div>
       </div>
-      <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:10px;" id="sug-count-lbl">Sin sugerencias enviadas</div>
-      <div id="sug-list"></div>
-    </div>
-  </div>
-
-</div><!-- /scroll -->
-
-<!-- FAB -->
-<div class="fab-wrap" id="fab-wrap">
-  <div class="fab-menu" id="fab-menu">
-    <div class="fab-opt" onclick="openSheet('ingreso')"><div class="fab-opt-ico" style="background:var(--green-dim);">💚</div><span class="fab-opt-lbl" style="color:var(--green);">Agregar ingreso</span></div>
-    <div class="fab-opt" onclick="openSheet('gasto')"><div class="fab-opt-ico" style="background:var(--red-dim);">❤️</div><span class="fab-opt-lbl" style="color:var(--red);">Agregar gasto</span></div>
-  </div>
-  <button class="fab-btn" id="fab-btn" onclick="toggleFab()">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="#000" stroke-width="2.5" stroke-linecap="round"/></svg>
-  </button>
-</div>
-
-<!-- SUGERENCIAS BTN -->
-<div class="sug-btn" id="sug-btn" onclick="switchTab('sugerencias')" title="Buzón de sugerencias">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16C79A" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <div class="sug-dot" id="sug-dot" style="display:none;">!</div>
-</div>
-
-<!-- NAV -->
-<div class="nav">
-  <div class="nb active" onclick="switchTab('inicio')" id="nav-inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 4L21 12V21H15V15H9V21H3V12Z" stroke-linejoin="round"/></svg><span class="nb-label">Inicio</span></div>
-  <div class="nb" onclick="switchTab('movimientos')" id="nav-movimientos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6l4-4 4 4M8 18l4 4 4-4M4 12h16" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nb-label">Movim.</span></div>
-  <div class="nb" onclick="switchTab('metas')" id="nav-metas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nb-label">Metas</span></div>
-  <div class="nb" onclick="switchTab('deudas')" id="nav-deudas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4" stroke-linecap="round"/></svg><span class="nb-label">Deudas</span></div>
-  <div class="nb" onclick="switchTab('analisis')" id="nav-analisis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6" stroke-linecap="round"/></svg><span class="nb-label">Análisis</span></div>
-  <div class="nb" onclick="switchTab('perfil')" id="nav-perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/></svg><span class="nb-label">Perfil</span></div>
-</div>
-
-<!-- MODAL -->
-<div class="overlay" id="overlay" onclick="closeOverlay(event)">
-  <div class="sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="sheet-title">Nuevo</div>
-    <div class="sheet-sub" id="sheet-sub"></div>
-
-    <!-- TX FORM -->
-    <div id="form-tx" style="display:none;">
-      <div class="type-toggle">
-        <div class="type-btn" id="tbtn-ing" onclick="setTxType('ingreso')">💚 Ingreso</div>
-        <div class="type-btn" id="tbtn-gas" onclick="setTxType('gasto')">❤️ Gasto</div>
-      </div>
-      <div class="field"><div class="field-label">Descripción</div><input class="field-input" id="tx-name" type="text" placeholder="Ej: Supermercado, Salario..."></div>
-      <div class="field"><div class="field-label">Monto ($)</div><input class="field-input" id="tx-amt" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-      <div class="field"><div class="field-label">Categoría</div><div class="cat-chips" id="cat-chips"></div></div>
     </div>
 
-    <!-- META FORM -->
-    <div id="form-meta" style="display:none;">
-      <div class="field"><div class="field-label">Nombre de la meta</div><input class="field-input" id="meta-name" type="text" placeholder="Ej: Viaje a México..."></div>
-      <div class="field"><div class="field-label">Monto objetivo ($)</div><input class="field-input" id="meta-obj" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-      <div class="field"><div class="field-label">Ya tengo ahorrado ($)</div><input class="field-input" id="meta-aho" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-      <div class="field"><div class="field-label">Fecha objetivo</div><input class="field-input" id="meta-fecha" type="date"></div>
-    </div>
+  </div><!-- /main -->
 
-    <!-- DEUDA FORM -->
-    <div id="form-deuda" style="display:none;">
-      <div class="field"><div class="field-label">Nombre (ej: Tarjeta Visa)</div><input class="field-input" id="deu-name" type="text" placeholder="Banco o nombre..."></div>
-      <div class="field"><div class="field-label">Saldo total ($)</div><input class="field-input" id="deu-total" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-      <div class="field"><div class="field-label">Tasa de interés mensual (%)</div><input class="field-input" id="deu-rate" type="number" step="0.1" inputmode="decimal" placeholder="2.5"></div>
-      <div class="field"><div class="field-label">Pago mínimo mensual ($)</div><input class="field-input" id="deu-min" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-    </div>
-
-    <!-- ABONO FORM -->
-    <div id="form-abono" style="display:none;">
-      <div style="margin-bottom:14px;background:var(--card2);border-radius:14px;padding:14px;"><div style="font-size:13px;font-weight:600;" id="abono-debt-name">Deuda</div><div style="font-size:12px;color:var(--muted2);margin-top:2px;" id="abono-debt-bal">Saldo actual: $0</div></div>
-      <div class="field"><div class="field-label">Monto del abono ($)</div><input class="field-input" id="abono-amt" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-    </div>
-
-    <div class="sheet-btns">
-      <button class="btn-cancel" onclick="closeSheet()">Cancelar</button>
-      <button class="btn-confirm" id="btn-confirm" onclick="saveSheet()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-</div><!-- /app-main -->
-</div><!-- /app -->
+</div><!-- /shell -->
 
 <script>
-// ══════════════════════════════════════════
-// NEXUM — STATE & DATA
-// ══════════════════════════════════════════
-const SK = 'nexum_v2';
-const DEFAULT_STATE = {
-  unlocked: false,
-  profile: {name:'Enrique', freq:'quincenal', salary:856.30},
-  transactions: [
+// ═══ STATE ═══
+const SK='nexum_v3';
+const DEF={
+  unlocked:false,
+  profile:{name:'Enrique',freq:'quincenal',salary:856.30},
+  transactions:[
     {id:1,tipo:'ingreso',name:'Salario Q1',cat:'Ingresos',amount:856.30,date:'2025-05-01',emoji:'💼'},
     {id:2,tipo:'ingreso',name:'Salario Q2',cat:'Ingresos',amount:856.30,date:'2025-05-15',emoji:'💼'},
     {id:3,tipo:'ingreso',name:'Ingreso extra',cat:'Ingresos',amount:180.00,date:'2025-05-10',emoji:'💵'},
@@ -616,509 +601,340 @@ const DEFAULT_STATE = {
     {id:10,tipo:'gasto',name:'Hipoteca 2',cat:'Vivienda',amount:281.58,date:'2025-05-15',emoji:'🏠'},
     {id:11,tipo:'gasto',name:'Casa/Renta',cat:'Vivienda',amount:160.00,date:'2025-05-01',emoji:'🏠'},
   ],
-  metas: [
+  metas:[
     {id:1,name:'Fondo emergencia',emoji:'🛡️',objetivo:5000,ahorrado:3200,fecha:'2025-12-31'},
     {id:2,name:'Viaje a Japón',emoji:'✈️',objetivo:3500,ahorrado:1800,fecha:'2026-03-01'},
   ],
-  deudas: [
+  deudas:[
     {id:1,name:'Tarjeta A',total:1000,saldo:1000,rate:2.5,minPago:50},
     {id:2,name:'Tarjeta C',total:1200,saldo:1200,rate:3.0,minPago:60},
     {id:3,name:'Tarjeta B',total:3600,saldo:3600,rate:2.0,minPago:120},
-  ]
+  ],
+  sugerencias:[]
 };
+let S={...DEF};
+try{const s=localStorage.getItem(SK);if(s){const p=JSON.parse(s);S={...DEF,...p};}}catch(e){}
+const sv=()=>{try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}};
 
-let state = {...DEFAULT_STATE};
-try{const s=localStorage.getItem(SK);if(s){const p=JSON.parse(s);state={...DEFAULT_STATE,...p};}}catch(e){}
-function save(){try{localStorage.setItem(SK,JSON.stringify(state));}catch(e){}}
+const $=id=>document.getElementById(id);
+let nid=500;
+const fmt=n=>'$'+parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const fmtR=n=>'$'+Math.round(n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
 
-const $ = id => document.getElementById(id);
-let _nid = 500;
-const fmt = n => '$'+parseFloat(n||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-const fmtR = n => '$'+Math.round(n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
-
-const CATS = [
-  {name:'Comida',emoji:'🍔',color:'#16C79A'},
-  {name:'Transporte',emoji:'🚗',color:'#4A9EFF'},
-  {name:'Vivienda',emoji:'🏠',color:'#FFB830'},
-  {name:'Ocio',emoji:'🎬',color:'#9B72FF'},
-  {name:'Salud',emoji:'💊',color:'#FF4D6A'},
-  {name:'Personal',emoji:'👤',color:'#FF7849'},
-  {name:'Educación',emoji:'📚',color:'#26C6DA'},
-  {name:'Ingresos',emoji:'💰',color:'#16C79A'},
-  {name:'Otros',emoji:'📦',color:'#6B7A8D'},
+const CATS=[
+  {name:'Comida',e:'🍔',c:'#16C79A'},{name:'Transporte',e:'🚗',c:'#4A9EFF'},
+  {name:'Vivienda',e:'🏠',c:'#FFB830'},{name:'Ocio',e:'🎬',c:'#9B72FF'},
+  {name:'Salud',e:'💊',c:'#FF4D6A'},{name:'Personal',e:'👤',c:'#FF7849'},
+  {name:'Educación',e:'📚',c:'#26C6DA'},{name:'Ingresos',e:'💰',c:'#16C79A'},
+  {name:'Otros',e:'📦',c:'#6B7A8D'},
 ];
-const catColor = n => CATS.find(c=>c.name===n)?.color||'#6B7A8D';
-const catEmoji = n => CATS.find(c=>c.name===n)?.emoji||'📦';
+const cc=n=>CATS.find(c=>c.name===n)?.c||'#6B7A8D';
+const ce=n=>CATS.find(c=>c.name===n)?.e||'📦';
 
-// ── PAYWALL ──
-function unlockApp(){
-  state.unlocked=true;
-  save();
+// ═══ PAYWALL ═══
+function unlock(){
+  S.unlocked=true;sv();
   $('paywall').style.display='none';
-  $('app-main').classList.remove('app-main-hidden');
-  initApp();
-}
-// check if already unlocked
-// ── CALC ──
-function calc(){
-  const txs = state.transactions;
-  const ingresos = txs.filter(t=>t.tipo==='ingreso').reduce((s,t)=>s+t.amount,0);
-  const gastos = txs.filter(t=>t.tipo==='gasto').reduce((s,t)=>s+t.amount,0);
-  const saldo = ingresos - gastos;
-  const totalDeuda = state.deudas.reduce((s,d)=>s+d.saldo,0);
-  const disponible = saldo - totalDeuda*0.1; // reserve 10% for debt payments
-  const ratioAhorro = ingresos>0?Math.max(saldo,0)/ingresos:0;
-  const score = Math.min(100, Math.max(0, Math.round(ratioAhorro*100*1.4 + 20)));
-  const byCat = {};
-  txs.filter(t=>t.tipo==='gasto').forEach(t=>{byCat[t.cat]=(byCat[t.cat]||0)+t.amount;});
-  return {ingresos, gastos, saldo, totalDeuda, score, byCat, disponible};
+  $('main').style.display='flex';
+  renderAll();
 }
 
-function simDebt(deudas, extra=0){
-  if(!deudas.length) return {months:0, totalInterest:0, completedMonths:[]};
-  let bals = deudas.map(d=>d.saldo);
-  let ti=0, month=0, done=new Array(bals.length).fill(null);
-  const budget = deudas.reduce((s,d)=>s+d.minPago,0) + extra;
-  while(bals.some(b=>b>0.01) && month<360){
-    month++;
-    for(let i=0;i<bals.length;i++){if(bals[i]>0){const int=bals[i]*(deudas[i].rate/100);bals[i]+=int;ti+=int;}}
-    let rem=budget;
-    for(let i=0;i<bals.length;i++){
-      if(bals[i]>0.01){
-        const first=bals.findIndex(b=>b>0.01)===i;
-        const pay=first?Math.min(rem,bals[i]):Math.min(deudas[i].minPago,bals[i],rem);
-        bals[i]-=pay;rem-=pay;if(rem<=0)break;
-      }
-    }
-    for(let i=0;i<bals.length;i++){if(bals[i]<=0.01&&done[i]===null){done[i]=month;bals[i]=0;}}
-  }
-  return{months:month,totalInterest:ti,completedMonths:done};
-}
-
-// ══ RENDER INICIO ══
-function renderInicio(){
-  const c = calc();
-  const N = new Date();
-  const h = N.getHours();
-  $('hdr-greeting').textContent = h<12?'Buenos días ☀️':h<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
-  $('hdr-name').textContent = 'Hola, '+(state.profile.name||'Enrique');
-  $('notif-dot').style.display = 'block';
-
-  // Balance
-  $('bal-main').textContent = c.saldo.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  const pct = c.ingresos>0?Math.round((Math.max(c.saldo,0)/c.ingresos)*100):0;
-  const bt = $('bal-trend');
-  bt.textContent = (pct>=0?'↑ ':'↓ ')+Math.abs(pct)+'% ahorro mensual';
-  bt.style.background = pct>=20?'var(--green-dim)':pct>=5?'var(--amber-dim)':'var(--red-dim)';
-  bt.style.color = pct>=20?'var(--green)':pct>=5?'var(--amber)':'var(--red)';
-  $('bs-ing').textContent = fmtR(c.ingresos);
-  $('bs-gas').textContent = fmtR(c.gastos);
-  $('bs-deu').textContent = fmtR(c.totalDeuda);
-
-  // Score
-  const sc = c.score;
-  const offset = 157 - (157*sc/100);
-  $('score-arc').setAttribute('stroke-dashoffset', offset.toFixed(1));
-  const scColor = sc>=70?'var(--green)':sc>=40?'var(--amber)':'var(--red)';
-  $('score-arc').style.stroke = scColor;
-  $('score-num').textContent = sc;
-  $('score-num').style.color = scColor;
-  $('score-lbl').textContent = sc>=70?'Excelente 🟢':sc>=40?'Regular 🟡':'Crítico 🔴';
-  $('score-sub').textContent = sc>=70?'Tus finanzas están sanas. ¡Sigue así!':sc>=40?'Hay margen para mejorar. Reduce gastos variables.':'Tus gastos superan demasiado el ingreso disponible.';
-  $('score-segs').innerHTML = [0,1,2].map(i=>{
-    const clrs=['var(--red)','var(--amber)','var(--green)'];
-    const a=(i===0&&sc<40)||(i===1&&sc>=40&&sc<70)||(i===2&&sc>=70);
-    return `<div class="score-seg" style="background:${a?clrs[i]:'rgba(255,255,255,0.07)'};"></div>`;
-  }).join('');
-
-  // Insight
-  const topCat = Object.entries(c.byCat).sort((a,b)=>b[1]-a[1])[0];
-  const {months} = simDebt(state.deudas);
-  let txt = '';
-  if(c.totalDeuda>0&&months>0) txt = `Con tus ingresos puedes quedar libre de deudas en ~${months} meses usando la bola de nieve. Deuda total: ${fmt(c.totalDeuda)}.`;
-  else if(topCat) txt = `Tu mayor gasto este mes es ${topCat[0]} con ${fmt(topCat[1])} (${c.gastos>0?Math.round(topCat[1]/c.gastos*100):0}% del total).`;
-  else txt = 'Agrega tus primeros movimientos para ver insights personalizados.';
-  $('insight-text').textContent = txt;
-
-  // Quick grid
-  const qg = $('home-quick');
-  const monthly = state.profile.freq==='quincenal'?state.profile.salary*2:state.profile.salary;
-  qg.innerHTML = [
-    {ico:'💰',bg:'var(--green-dim)',lbl:'Ingreso mensual',val:fmtR(monthly),chg:'configurado',chgClr:'var(--green)'},
-    {ico:'💳',bg:'var(--red-dim)',lbl:'Deuda total',val:fmtR(c.totalDeuda),chg:state.deudas.length+' tarjetas',chgClr:'var(--red)'},
-    {ico:'🎯',bg:'var(--amber-dim)',lbl:'Metas activas',val:state.metas.length,chg:'en progreso',chgClr:'var(--amber)'},
-    {ico:'📊',bg:'var(--purple-dim)',lbl:'Gastos del mes',val:fmtR(c.gastos),chg:c.ingresos>0?Math.round(c.gastos/c.ingresos*100)+'% del ingreso':'—',chgClr:'var(--purple)'},
-  ].map(q=>`<div class="qc" onclick="switchTab('${q.ico==='💳'?'deudas':q.ico==='🎯'?'metas':q.ico==='📊'?'analisis':'perfil'}')">
-    <div class="qc-ico" style="background:${q.bg};">${q.ico}</div>
-    <div class="qc-lbl">${q.lbl}</div>
-    <div class="qc-val">${q.val}</div>
-    <div class="qc-chg" style="color:${q.chgClr};">${q.chg}</div>
-  </div>`).join('');
-
-  // Top gastos
-  const tg = $('top-gastos');
-  const sorted = Object.entries(c.byCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxV = sorted[0]?.[1]||1;
-  tg.innerHTML = sorted.length ? sorted.map(([cat,amt])=>`
-    <div class="tg-item">
-      <div class="tg-icon" style="background:${catColor(cat)}22;">${catEmoji(cat)}</div>
-      <div class="tg-info"><div class="tg-name">${cat}</div><div class="tg-sub">${c.gastos>0?Math.round(amt/c.gastos*100):0}% del total</div></div>
-      <div class="tg-right">
-        <div class="tg-amt">${fmt(amt)}</div>
-        <div class="bar-bg" style="width:80px;"><div class="bar-fg" style="width:${Math.round(amt/maxV*100)}%;background:${catColor(cat)};"></div></div>
-      </div>
-    </div>`).join('') : '<div style="padding:16px 0;text-align:center;color:var(--muted2);font-size:13px;">Sin gastos aún</div>';
-
-  // Home bars
-  const hb = $('home-bars');
-  const months2 = ['Ene','Feb','Mar','Abr','May','Jun'];
-  const vals = [310,430,370,500,420,c.gastos];
-  const maxB = Math.max(...vals)||1;
-  hb.innerHTML = vals.map((v,i)=>{const h2=Math.max(Math.round((v/maxB)*70),3);const last=i===vals.length-1;return`<div class="bc-col"><div class="bc-bar" style="height:${h2}px;background:${last?'var(--green)':'rgba(22,199,154,0.22)'};"></div><span class="bc-lbl">${months2[i]}</span></div>`;}).join('');
-}
-
-// ══ RENDER MOVIMIENTOS ══
-let _txFilter='todo';
-function filterTx(f,el){
-  _txFilter=f;
-  document.querySelectorAll('.txf').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-  renderMovimientos();
-}
-function renderMovimientos(){
-  const list=$('tx-list');
-  let txs=[...state.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(_txFilter==='ingreso')txs=txs.filter(t=>t.tipo==='ingreso');
-  else if(_txFilter==='gasto')txs=txs.filter(t=>t.tipo==='gasto');
-  else if(!['todo','ingreso','gasto'].includes(_txFilter))txs=txs.filter(t=>t.cat===_txFilter);
-  if(!txs.length){list.innerHTML='<div class="empty"><div class="empty-emoji">📭</div><div class="empty-title">Sin movimientos</div><div class="empty-sub">Toca el botón + para agregar tu primer movimiento</div></div>';return;}
-  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const groups={};
-  txs.forEach(t=>{if(!groups[t.date])groups[t.date]=[];groups[t.date].push(t);});
-  list.innerHTML=Object.entries(groups).map(([date,items])=>{
-    const d=new Date(date+'T12:00:00');
-    const lbl=d.getDate()+' '+MS[d.getMonth()]+' '+d.getFullYear();
-    return`<div class="tx-group-lbl">${lbl}</div>${items.map(t=>`
-      <div class="tx-item">
-        <div class="tx-ico" style="background:${catColor(t.cat)}22;">${t.emoji||catEmoji(t.cat)}</div>
-        <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-cat">${t.cat}</div></div>
-        <div class="tx-right"><div class="tx-amt" style="color:${t.tipo==='ingreso'?'var(--green)':'var(--red)'};">${t.tipo==='ingreso'?'+':'−'}${fmt(t.amount)}</div></div>
-      </div>`).join('')}`;
-  }).join('');
-}
-
-// ══ RENDER METAS ══
-function renderMetas(){
-  const ml=$('metas-list');
-  if(!state.metas.length){ml.innerHTML='<div class="empty"><div class="empty-emoji">🎯</div><div class="empty-title">Sin metas</div><div class="empty-sub">Crea tu primera meta de ahorro</div></div>';return;}
-  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  ml.innerHTML=state.metas.map((m,i)=>{
-    const pct=m.objetivo>0?Math.min(Math.round(m.ahorrado/m.objetivo*100),100):0;
-    const d=new Date(m.fecha+'T12:00:00');
-    const fechaStr=d.getDate()+' '+MS[d.getMonth()]+' '+d.getFullYear();
-    const dias=Math.max(0,Math.round((d-new Date())/(1000*60*60*24)));
-    const falta=m.objetivo-m.ahorrado;
-    const daily=dias>0?(falta/dias).toFixed(2):0;
-    const clr=pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--blue)';
-    return`<div class="meta-card">
-      <div class="meta-head"><div><div class="meta-title">${m.name}</div><div class="meta-amts">Ahorrado: <strong>${fmt(m.ahorrado)}</strong> de ${fmt(m.objetivo)}</div></div><span style="font-size:24px;">${m.emoji}</span></div>
-      <div class="meta-bar"><div class="meta-bar-fill" style="width:${pct}%;background:${clr};"></div></div>
-      <div class="meta-footer"><span class="meta-pct" style="color:${clr};">${pct}%</span><span class="meta-dl">📅 ${fechaStr}</span></div>
-      ${dias>0&&falta>0?`<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 10px;border-radius:20px;font-weight:600;">💡 Ahorra $${daily}/día y llegas a tiempo</span><button onclick="deleteMeta(${m.id})" style="background:var(--red-dim);border:none;color:var(--red);font-size:11px;padding:4px 10px;border-radius:8px;cursor:pointer;font-family:var(--font);font-weight:600;">Borrar</button></div>`:`<div style="margin-top:8px;text-align:right;"><button onclick="deleteMeta(${m.id})" style="background:var(--red-dim);border:none;color:var(--red);font-size:11px;padding:4px 10px;border-radius:8px;cursor:pointer;font-family:var(--font);font-weight:600;">Borrar</button></div>`}
-    </div>`;
-  }).join('');
-}
-
-function deleteMeta(id){state.metas=state.metas.filter(m=>m.id!==id);save();renderAll();}
-
-// ══ RENDER DEUDAS ══
-function renderDeudas(){
-  const {months,totalInterest,completedMonths}=simDebt(state.deudas);
-  const totalSaldo=state.deudas.reduce((s,d)=>s+d.saldo,0);
-  $('debt-total').textContent=fmt(totalSaldo);
-  $('debt-months-label').textContent=totalSaldo>0?`Libre en ~${months} meses usando bola de nieve · Interés est. ${fmt(totalInterest)}`:'¡Sin deudas! 🎉';
-
-  const dl=$('debt-list');
-  if(!state.deudas.length){dl.innerHTML='<div class="empty"><div class="empty-emoji">🎉</div><div class="empty-title">Sin deudas</div><div class="empty-sub">Agrega tus tarjetas para hacer seguimiento</div></div>';return;}
-
-  const DCLRS=['var(--green)','var(--amber)','var(--red)','var(--blue)','var(--purple)'];
-  const DBGS=['var(--green-dim)','var(--amber-dim)','var(--red-dim)','var(--blue-dim)','var(--purple-dim)'];
-  const LBLS=['1° Atacar primero','2° Mínimos','3° Mínimos','4°','5°'];
-  dl.innerHTML=state.deudas.map((d,i)=>{
-    const clr=DCLRS[Math.min(i,4)],bg=DBGS[Math.min(i,4)],lbl=LBLS[Math.min(i,4)];
-    const cm=completedMonths[i]||months||'?';
-    const paidPct=d.total>0?Math.round((1-d.saldo/d.total)*100):0;
-    const mensual=Math.round(d.saldo*(d.rate/100)+d.minPago);
-    return`<div class="debt-card">
-      <div class="debt-head"><div><div class="debt-name">${d.name}</div></div><div class="debt-total" style="color:${clr};">${fmt(d.saldo)}</div></div>
-      <div class="debt-tags">
-        <span class="debt-tag" style="background:${bg};color:${clr};">${lbl}</span>
-        <span class="debt-tag" style="background:var(--card2);color:var(--muted2);">~${cm} meses</span>
-        <span class="debt-tag" style="background:var(--card2);color:var(--muted2);">${d.rate}%/mes</span>
-      </div>
-      <div class="debt-bar"><div class="debt-bar-fill" style="width:${paidPct}%;background:${clr};"></div></div>
-      <div class="debt-stats">
-        <div class="debt-stat"><div class="debt-stat-val">${fmt(d.minPago)}</div><div class="debt-stat-lbl">Pago mínimo</div></div>
-        <div class="debt-stat"><div class="debt-stat-val" style="color:var(--red);">${fmt(d.saldo*(d.rate/100))}</div><div class="debt-stat-lbl">Interés/mes</div></div>
-        <div class="debt-stat"><div class="debt-stat-val" style="color:${clr};">${paidPct}%</div><div class="debt-stat-lbl">Pagado</div></div>
-      </div>
-      <div class="debt-actions">
-        <button class="debt-act-btn" style="background:var(--green-dim);color:var(--green);" onclick="openAbono(${d.id})">💰 Abonar</button>
-        <button class="debt-act-btn" style="background:var(--red-dim);color:var(--red);" onclick="deleteDeuda(${d.id})">🗑️ Eliminar</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function deleteDeuda(id){if(confirm('¿Eliminar esta deuda?')){state.deudas=state.deudas.filter(d=>d.id!==id);save();renderAll();}}
-
-function openAbono(id){
-  const d=state.deudas.find(x=>x.id===id);if(!d)return;
-  _sheetType='abono';_abonoId=id;
-  $('sheet-title').textContent='Registrar abono';
-  $('sheet-sub').textContent='Reduce tu deuda';
-  hideAllForms();$('form-abono').style.display='block';
-  $('abono-debt-name').textContent=d.name;
-  $('abono-debt-bal').textContent='Saldo actual: '+fmt(d.saldo);
-  $('abono-amt').value='';
-  $('overlay').classList.add('open');
-  setTimeout(()=>$('abono-amt').focus(),350);
-}
-
-// ══ RENDER ANÁLISIS ══
-function renderAnalisis(){
-  const c=calc();
-  const entries=Object.entries(c.byCat).sort((a,b)=>b[1]-a[1]);
-  const total=entries.reduce((s,[,v])=>s+v,0)||1;
-  const svg=$('donut-svg'),leg=$('donut-legend');
-  const cx=60,cy=60,r=44,sw=14,circ=2*Math.PI*r;
-  let off=0,paths='';
-  entries.forEach(([cat,amt])=>{const pct=amt/total;const dash=pct*circ;const clr=catColor(cat);paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${clr}" stroke-width="${sw}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-off}" stroke-linecap="butt" transform="rotate(-90 ${cx} ${cy})"/>`;off+=dash;});
-  svg.innerHTML=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="${sw}"/>${paths}<text x="${cx}" y="${cy-4}" text-anchor="middle" fill="#E6E8EA" font-size="11" font-family="Poppins" font-weight="600">${entries.length}</text><text x="${cx}" y="${cy+10}" text-anchor="middle" fill="#9AA5B4" font-size="9" font-family="Poppins">categ.</text>`;
-  leg.innerHTML=entries.slice(0,5).map(([cat,amt])=>`<div class="dl-item"><div class="dl-dot" style="background:${catColor(cat)};"></div><span class="dl-name">${cat}</span><span class="dl-pct" style="color:${catColor(cat)};">${Math.round(amt/total*100)}%</span></div>`).join('');
-
-  const ab=$('analisis-bars'),mths=['Dic','Ene','Feb','Mar','Abr','May'],vals=[280,390,350,470,410,c.gastos],maxB=Math.max(...vals)||1;
-  ab.innerHTML=vals.map((v,i)=>{const h=Math.max(Math.round((v/maxB)*72),3);const last=i===vals.length-1;return`<div class="bc-col"><div class="bc-bar" style="height:${h}px;background:${last?'var(--green)':'rgba(22,199,154,0.25)'};"></div><span class="bc-lbl">${mths[i]}</span></div>`;}).join('');
-
-  const libre=c.saldo*0.6;
-  $('pred-text').textContent='A este ritmo terminarás el mes con aproximadamente:';
-  $('pred-val').textContent=fmt(Math.max(libre,0));
-  $('pred-val').style.color=libre>200?'var(--green)':libre>0?'var(--amber)':'var(--red)';
-
-  $('analisis-cats').innerHTML=entries.map(([cat,amt],i)=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${i<entries.length-1?'border-bottom:1px solid var(--border)':''}"><div style="width:36px;height:36px;border-radius:10px;background:${catColor(cat)}22;display:flex;align-items:center;justify-content:center;font-size:17px;">${catEmoji(cat)}</div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;">${cat}</div><div style="height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:5px;"><div style="height:100%;width:${Math.round(amt/total*100)}%;background:${catColor(cat)};border-radius:2px;"></div></div></div><div style="text-align:right;flex-shrink:0;"><div style="font-size:13px;font-weight:600;">${fmt(amt)}</div><div style="font-size:10px;color:var(--muted2);">${Math.round(amt/total*100)}%</div></div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--muted2);font-size:13px;">Sin datos</div>';
-}
-
-// ══ PERFIL ══
-function renderPerfil(){
-  $('sc-nombre').value=state.profile.name||'';
-  $('sc-salary').value=state.profile.salary||'';
-  $('prof-name').textContent=state.profile.name||'Usuario';
-  setFreqUI(state.profile.freq||'quincenal');
-  updateMonthly();
-}
-
-function setFreq(f){
-  state.profile.freq=f;
-  save();
-  setFreqUI(f);
-  updateMonthly();
-  renderInicio();
-}
-function setFreqUI(f){
-  $('freq-q').className='freq-btn'+(f==='quincenal'?' active':'');
-  $('freq-m').className='freq-btn'+(f==='mensual'?' active':'');
-  $('salary-label').textContent=f==='quincenal'?'Monto por quincena':'Monto mensual';
-}
-function saveSalary(){
-  state.profile.salary=parseFloat($('sc-salary').value)||0;
-  save();updateMonthly();renderInicio();
-}
-function saveProfile(){
-  state.profile.name=($('sc-nombre').value||'Usuario').trim();
-  save();
-  $('prof-name').textContent=state.profile.name;
-  $('hdr-name').textContent='Hola, '+state.profile.name;
-}
-function updateMonthly(){
-  const s=state.profile.salary||0;
-  const m=state.profile.freq==='quincenal'?s*2:s;
-  $('sc-monthly').textContent=fmt(m);
-}
-function showNotifs(){alert('Sin notificaciones nuevas.');}
-
-// ══ SHEET ══
-let _sheetType='', _txType='gasto', _selCat='Comida', _abonoId=null;
-
-function hideAllForms(){
-  ['form-tx','form-meta','form-deuda','form-abono'].forEach(id=>$(id).style.display='none');
-}
-function setTxType(t){
-  _txType=t;
-  $('tbtn-ing').className='type-btn'+(t==='ingreso'?' ing':'');
-  $('tbtn-gas').className='type-btn'+(t==='gasto'?' gas':'');
-  if(t==='ingreso')_selCat='Ingresos';
-  else _selCat='Comida';
-  buildCatChips();
-}
-function buildCatChips(){
-  const cats=_txType==='ingreso'?['Ingresos','Otros']:CATS.filter(c=>c.name!=='Ingresos').map(c=>c.name);
-  $('cat-chips').innerHTML=cats.map(cat=>`<div class="cat-chip${cat===_selCat?' sel':''}" onclick="selCat('${cat}')">${catEmoji(cat)} ${cat}</div>`).join('');
-}
-function selCat(cat){_selCat=cat;buildCatChips();}
-
-function openSheet(type){
-  closeFab();
-  _sheetType=type;
-  hideAllForms();
-  if(type==='gasto'||type==='ingreso'){
-    $('sheet-title').textContent=type==='gasto'?'Nuevo gasto':'Nuevo ingreso';
-    $('sheet-sub').textContent=type==='gasto'?'¿En qué gastaste?':'¿De dónde vino?';
-    $('form-tx').style.display='block';
-    setTxType(type);
-    $('tx-name').value='';$('tx-amt').value='';
-  }else if(type==='meta'){
-    $('sheet-title').textContent='Nueva meta';
-    $('sheet-sub').textContent='Define tu objetivo de ahorro';
-    $('form-meta').style.display='block';
-    $('meta-name').value='';$('meta-obj').value='';$('meta-aho').value='0';
-    const d=new Date();d.setMonth(d.getMonth()+6);
-    $('meta-fecha').value=d.toISOString().split('T')[0];
-  }else if(type==='deuda'){
-    $('sheet-title').textContent='Nueva deuda';
-    $('sheet-sub').textContent='Agrega tarjeta o préstamo';
-    $('form-deuda').style.display='block';
-    $('deu-name').value='';$('deu-total').value='';$('deu-rate').value='2.5';$('deu-min').value='';
-  }
-  $('overlay').classList.add('open');
-  setTimeout(()=>{
-    const first=$('form-'+type==='gasto'?'tx':type==='ingreso'?'tx':type);
-    if(first){const inp=first.querySelector('input');if(inp)inp.focus();}
-  },350);
-}
-
-function closeSheet(){$('overlay').classList.remove('open');}
-function closeOverlay(e){if(e.target===$('overlay'))closeSheet();}
-
-function saveSheet(){
-  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const N=new Date();
-  const dateStr=N.getFullYear()+'-'+(N.getMonth()+1).toString().padStart(2,'0')+'-'+N.getDate().toString().padStart(2,'0');
-
-  if(_sheetType==='gasto'||_sheetType==='ingreso'){
-    const name=$('tx-name').value.trim();
-    const amount=parseFloat($('tx-amt').value)||0;
-    if(!name){$('tx-name').style.borderColor='var(--red)';setTimeout(()=>$('tx-name').style.borderColor='',1500);return;}
-    if(amount<=0){$('tx-amt').style.borderColor='var(--red)';setTimeout(()=>$('tx-amt').style.borderColor='',1500);return;}
-    state.transactions.push({id:++_nid,tipo:_txType,name,cat:_selCat,amount,date:dateStr,emoji:catEmoji(_selCat)});
-  }
-  else if(_sheetType==='meta'){
-    const name=$('meta-name').value.trim();
-    const obj=parseFloat($('meta-obj').value)||0;
-    const aho=parseFloat($('meta-aho').value)||0;
-    const fecha=$('meta-fecha').value||'2026-12-31';
-    if(!name||obj<=0)return;
-    const emojis=['🎯','✈️','💻','🚗','🏠','🎓','💍','🏖️'];
-    state.metas.push({id:++_nid,name,emoji:emojis[state.metas.length%emojis.length],objetivo:obj,ahorrado:aho,fecha});
-  }
-  else if(_sheetType==='deuda'){
-    const name=$('deu-name').value.trim();
-    const total=parseFloat($('deu-total').value)||0;
-    const rate=parseFloat($('deu-rate').value)||2.5;
-    const min=parseFloat($('deu-min').value)||Math.round(total*0.05);
-    if(!name||total<=0)return;
-    state.deudas.push({id:++_nid,name,total,saldo:total,rate,minPago:min});
-  }
-  else if(_sheetType==='abono'){
-    const amt=parseFloat($('abono-amt').value)||0;
-    if(amt<=0)return;
-    const d=state.deudas.find(x=>x.id===_abonoId);
-    if(d){d.saldo=Math.max(0,d.saldo-amt);if(d.saldo===0)state.deudas=state.deudas.filter(x=>x.id!==_abonoId);}
-    state.transactions.push({id:++_nid,tipo:'gasto',name:'Abono '+state.deudas.find(x=>x.id===_abonoId)?.name||'Deuda',cat:'Vivienda',amount:amt,date:dateStr,emoji:'💳'});
-  }
-
-  save();closeSheet();renderAll();
-}
-
-// ══ FAB ══
-let _fabOpen=false;
-function toggleFab(){_fabOpen=!_fabOpen;$('fab-menu').classList.toggle('open',_fabOpen);$('fab-btn').style.transform=_fabOpen?'rotate(45deg)':'rotate(0)';}
-function closeFab(){_fabOpen=false;$('fab-menu').classList.remove('open');$('fab-btn').style.transform='rotate(0)';}
-
-// ══ TABS ══
-const TABS=['inicio','movimientos','metas','deudas','analisis','perfil','sugerencias'];
-const FAB_TABS=['inicio','movimientos','metas','deudas'];
-function switchTab(tab){
-  TABS.forEach(t=>{$('tab-'+t).classList.remove('active');const n=$('nav-'+t);if(n)n.classList.remove('active');});
-  $('tab-'+tab).classList.add('active');
-  const navEl=$('nav-'+tab);if(navEl)navEl.classList.add('active');
-  $('scroll').scrollTop=0;closeFab();
-  const showFab=FAB_TABS.includes(tab);
-  $('fab-wrap').style.display=showFab?'flex':'none';
-  $('sug-btn').style.display=showFab&&tab!=='sugerencias'?'flex':'none';
-  if(tab==='sugerencias')renderSugerencias();
-}
-
-// ── SUGGESTIONS ──
-let _sugType='💡 Sugerencia';
-function setSugType(t,el){
-  _sugType=t;
-  document.querySelectorAll('.sug-chip').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
-}
-function saveSugerencia(){
-  const txt=$('sug-text').value.trim();
-  if(!txt){$('sug-text').style.borderColor='var(--red)';setTimeout(()=>$('sug-text').style.borderColor='',1500);return;}
-  const N=new Date();
-  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const dateStr=N.getDate()+' '+MS[N.getMonth()]+' '+N.getFullYear();
-  state.sugerencias=state.sugerencias||[];
-  state.sugerencias.unshift({id:++_nid,tipo:_sugType,texto:txt,fecha:dateStr});
-  $('sug-text').value='';
-  save();renderSugerencias();
-  $('sug-dot').style.display='none';
-  alert('✅ ¡Gracias por tu sugerencia! Fue guardada.');
-}
-function renderSugerencias(){
-  const sugs=state.sugerencias||[];
-  const lbl=$('sug-count-lbl');
-  const list=$('sug-list');
-  if(!sugs.length){lbl.textContent='Sin sugerencias enviadas';list.innerHTML='';return;}
-  lbl.textContent=sugs.length+' sugerencia'+(sugs.length!==1?'s':'')+' enviada'+(sugs.length!==1?'s':'');
-  list.innerHTML=sugs.map(s=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:8px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-      <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--green-dim);color:var(--green);">${s.tipo}</span>
-      <span style="font-size:11px;color:var(--muted2);">${s.fecha}</span>
-    </div>
-    <div style="font-size:13px;line-height:1.5;color:var(--text);">${s.texto}</div>
-  </div>`).join('');
-}
-
-function clearData(){
-  if(confirm('¿Borrar todos los datos y reiniciar?')){localStorage.removeItem(SK);location.reload();}
-}
-
-function renderAll(){renderInicio();renderMovimientos();renderMetas();renderDeudas();renderAnalisis();renderPerfil();}
-
-// ── SPLASH ──
+// ═══ SPLASH ═══
 function initSplash(){
-  const splash=$('splash');
-  if(!splash)return;
   setTimeout(()=>{
-    splash.classList.add('hide');
-    setTimeout(()=>{splash.style.display='none';},700);
+    const sp=$('splash');
+    sp.classList.add('out');
+    setTimeout(()=>{
+      sp.style.display='none';
+      if(!S.unlocked){
+        $('paywall').style.display='flex';
+      }
+    },600);
   },2600);
 }
 
-function initApp(){
-  renderAll();
-  initSplash();
+// ═══ CALC ═══
+function calc(){
+  const T=S.transactions;
+  const ing=T.filter(t=>t.tipo==='ingreso').reduce((s,t)=>s+t.amount,0);
+  const gas=T.filter(t=>t.tipo==='gasto').reduce((s,t)=>s+t.amount,0);
+  const sal=ing-gas;
+  const deu=S.deudas.reduce((s,d)=>s+d.saldo,0);
+  const ratio=ing>0?Math.max(sal,0)/ing:0;
+  const score=Math.min(100,Math.max(0,Math.round(ratio*100*1.4+20)));
+  const byCat={};
+  T.filter(t=>t.tipo==='gasto').forEach(t=>{byCat[t.cat]=(byCat[t.cat]||0)+t.amount;});
+  return{ing,gas,sal,deu,score,byCat};
 }
 
-if(state.unlocked){
-  $('paywall').style.display='none';
-  $('app-main').classList.remove('app-main-hidden');
-  initApp();
-} else {
+function simD(deudas,extra=0){
+  if(!deudas.length)return{months:0,ti:0,cm:[]};
+  let b=deudas.map(d=>d.saldo),ti=0,m=0,done=new Array(b.length).fill(null);
+  const bud=deudas.reduce((s,d)=>s+d.minPago,0)+extra;
+  while(b.some(x=>x>0.01)&&m<360){
+    m++;
+    for(let i=0;i<b.length;i++){if(b[i]>0){const int=b[i]*(deudas[i].rate/100);b[i]+=int;ti+=int;}}
+    let r=bud;
+    for(let i=0;i<b.length;i++){if(b[i]>0.01){const first=b.findIndex(x=>x>0.01)===i;const pay=first?Math.min(r,b[i]):Math.min(deudas[i].minPago,b[i],r);b[i]-=pay;r-=pay;if(r<=0)break;}}
+    for(let i=0;i<b.length;i++){if(b[i]<=0.01&&done[i]===null){done[i]=m;b[i]=0;}}
+  }
+  return{months:m,ti,cm:done};
+}
+
+// ═══ TABS ═══
+const ALLTABS=['inicio','movimientos','metas','deudas','analisis','perfil','sugerencias'];
+const FABTABS=['inicio','movimientos','metas','deudas'];
+let curTab='inicio';
+
+function go(tab){
+  ALLTABS.forEach(t=>{
+    const el=$('t-'+t);if(el)el.classList.remove('on');
+    const nb=$('nb-'+t);if(nb)nb.classList.remove('on');
+  });
+  $('t-'+tab).classList.add('on');
+  const nb=$('nb-'+tab);if(nb)nb.classList.add('on');
+  $('content').scrollTop=0;
+  closeFab();
+  curTab=tab;
+  const showFab=FABTABS.includes(tab)&&tab!=='sugerencias';
+  $('fabwrap').style.display=showFab?'flex':'none';
+  $('sugbtn').style.display=showFab?'flex':'none';
+  if(tab==='sugerencias')renderSug();
+  if(tab==='analisis')renderAnalisis();
+}
+
+// ═══ RENDER INICIO ═══
+function renderInicio(){
+  const c=calc();
+  const h=new Date().getHours();
+  $('hdr-hi').textContent=h<12?'Buenos días ☀️':h<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
+  $('hdr-name').textContent='Hola, '+(S.profile.name||'Enrique');
+  $('p-name').textContent=S.profile.name||'Enrique';
+  $('bal-n').textContent=c.sal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const pct=c.ing>0?Math.round(Math.max(c.sal,0)/c.ing*100):0;
+  const bt=$('bal-t');
+  bt.textContent=(pct>=0?'↑ ':'↓ ')+Math.abs(pct)+'% ahorro';
+  bt.style.background=pct>=20?'var(--gdim)':pct>=5?'var(--adim)':'var(--rdim)';
+  bt.style.color=pct>=20?'var(--green)':pct>=5?'var(--amber)':'var(--red)';
+  $('bs-i').textContent=fmtR(c.ing);$('bs-g').textContent=fmtR(c.gas);$('bs-d').textContent=fmtR(c.deu);
+  // Score
+  const sc=c.score,off=157-(157*sc/100);
+  $('sc-arc').setAttribute('stroke-dashoffset',off.toFixed(1));
+  const scC=sc>=70?'var(--green)':sc>=40?'var(--amber)':'var(--red)';
+  $('sc-arc').style.stroke=scC;$('sc-n').textContent=sc;$('sc-n').style.color=scC;
+  $('sc-lbl').textContent=sc>=70?'Excelente 🟢':sc>=40?'Regular 🟡':'Crítico 🔴';
+  $('sc-s').textContent=sc>=70?'Tus finanzas están sanas.':sc>=40?'Hay margen para mejorar.':'Tus gastos superan el ingreso.';
+  $('sc-bars').innerHTML=[0,1,2].map(i=>{const cs=['var(--red)','var(--amber)','var(--green)'];const a=(i===0&&sc<40)||(i===1&&sc>=40&&sc<70)||(i===2&&sc>=70);return`<div class="score-bar" style="background:${a?cs[i]:'rgba(255,255,255,0.07)'};"></div>`;}).join('');
+  // Insight
+  const top=Object.entries(c.byCat).sort((a,b)=>b[1]-a[1])[0];
+  const {months}=simD(S.deudas);
+  $('ins-s').textContent=c.deu>0&&months>0?`Libre de deudas en ~${months} meses (bola de nieve). Deuda total: ${fmt(c.deu)}.`:top?`Mayor gasto: ${top[0]} con ${fmt(top[1])} (${c.gas>0?Math.round(top[1]/c.gas*100):0}% del total).`:'Agrega movimientos para ver insights.';
+  // Quick grid
+  const mo=S.profile.freq==='quincenal'?S.profile.salary*2:S.profile.salary;
+  $('qg').innerHTML=[
+    {i:'💰',b:'var(--gdim)',l:'Ingreso mensual',v:fmtR(mo),c2:'configurado',cc2:'var(--green)',tab:'perfil'},
+    {i:'💳',b:'var(--rdim)',l:'Deuda total',v:fmtR(c.deu),c2:S.deudas.length+' tarjetas',cc2:'var(--red)',tab:'deudas'},
+    {i:'🎯',b:'var(--adim)',l:'Metas activas',v:S.metas.length,c2:'en progreso',cc2:'var(--amber)',tab:'metas'},
+    {i:'📊',b:'var(--pdim)',l:'Gastos del mes',v:fmtR(c.gas),c2:c.ing>0?Math.round(c.gas/c.ing*100)+'% ingreso':'—',cc2:'var(--purple)',tab:'analisis'},
+  ].map(q=>`<div class="qc" onclick="go('${q.tab}')"><div class="qc-ico" style="background:${q.b};">${q.i}</div><div class="qc-l">${q.l}</div><div class="qc-v">${q.v}</div><div class="qc-c" style="color:${q.cc2};">${q.c2}</div></div>`).join('');
+  // Top gastos
+  const sorted=Object.entries(c.byCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxV=sorted[0]?.[1]||1;
+  $('tg').innerHTML=sorted.length?sorted.map(([cat,amt])=>`<div class="tg"><div class="tg-ico" style="background:${cc(cat)}22;">${ce(cat)}</div><div style="flex:1;min-width:0;"><div class="tg-n">${cat}</div><div class="tg-s">${c.gas>0?Math.round(amt/c.gas*100):0}% del total</div></div><div class="tg-r"><div class="tg-a">${fmt(amt)}</div><div class="bg"><div class="bf" style="width:${Math.round(amt/maxV*100)}%;background:${cc(cat)};"></div></div></div></div>`).join(''):'<div style="padding:16px 0;text-align:center;color:var(--muted2);font-size:13px;">Sin gastos aún</div>';
+  // Bars
+  const vs=[310,430,370,500,420,c.gas],mb=Math.max(...vs)||1,ms=['Ene','Feb','Mar','Abr','May','Jun'];
+  $('hbars').innerHTML=vs.map((v,i)=>{const h2=Math.max(Math.round(v/mb*70),3);return`<div class="bc-col"><div class="bc-bar" style="height:${h2}px;background:${i===vs.length-1?'var(--green)':'rgba(22,199,154,0.22)'};"></div><span class="bc-l">${ms[i]}</span></div>`;}).join('');
+}
+
+// ═══ MOVIMIENTOS ═══
+let txf='todo';
+function ftx(f,el){txf=f;document.querySelectorAll('.txf').forEach(e=>e.classList.remove('on'));el.classList.add('on');renderMov();}
+function renderMov(){
+  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  let txs=[...S.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(txf==='ingreso')txs=txs.filter(t=>t.tipo==='ingreso');
+  else if(txf==='gasto')txs=txs.filter(t=>t.tipo==='gasto');
+  else if(!['todo','ingreso','gasto'].includes(txf))txs=txs.filter(t=>t.cat===txf);
+  const el=$('txlist');
+  if(!txs.length){el.innerHTML='<div class="empty"><div class="empty-e">📭</div><div class="empty-t">Sin movimientos</div><div class="empty-s">Toca + para agregar</div></div>';return;}
+  const gr={};txs.forEach(t=>{if(!gr[t.date])gr[t.date]=[];gr[t.date].push(t);});
+  el.innerHTML=Object.entries(gr).map(([d,its])=>{const dt=new Date(d+'T12:00:00');const lbl=dt.getDate()+' '+MS[dt.getMonth()]+' '+dt.getFullYear();return`<div class="tx-glbl">${lbl}</div>${its.map(t=>`<div class="tx-item"><div class="tx-ico" style="background:${cc(t.cat)}22;">${t.emoji||ce(t.cat)}</div><div style="flex:1;min-width:0;"><div class="tx-n">${t.name}</div><div class="tx-c">${t.cat}</div></div><div style="text-align:right;flex-shrink:0;"><div class="tx-a" style="color:${t.tipo==='ingreso'?'var(--green)':'var(--red)'};">${t.tipo==='ingreso'?'+':'−'}${fmt(t.amount)}</div></div></div>`).join('')}`;}).join('');
+}
+
+// ═══ METAS ═══
+function renderMetas(){
+  const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const el=$('metaslist');
+  if(!S.metas.length){el.innerHTML='<div class="empty"><div class="empty-e">🎯</div><div class="empty-t">Sin metas</div><div class="empty-s">Crea tu primera meta de ahorro</div></div>';return;}
+  el.innerHTML=S.metas.map(m=>{
+    const pct=m.objetivo>0?Math.min(Math.round(m.ahorrado/m.objetivo*100),100):0;
+    const d=new Date(m.fecha+'T12:00:00');
+    const dias=Math.max(0,Math.round((d-new Date())/(86400000)));
+    const falta=m.objetivo-m.ahorrado;
+    const daily=dias>0?(falta/dias).toFixed(2):0;
+    const clr=pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--blue)';
+    return`<div class="card"><div class="card-head"><div><div class="card-title">${m.name}</div><div style="font-size:12px;color:var(--muted2);margin-top:2px;">Ahorrado: <strong style="color:var(--text);font-size:14px;">${fmt(m.ahorrado)}</strong> de ${fmt(m.objetivo)}</div></div><span style="font-size:22px;">${m.emoji}</span></div><div class="bar8"><div class="bar8-fill" style="width:${pct}%;background:${clr};"></div></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;font-weight:600;color:${clr};">${pct}%</span><span style="font-size:11px;color:var(--muted2);">📅 ${d.getDate()+' '+MS[d.getMonth()]+' '+d.getFullYear()}</span></div>${dias>0&&falta>0?`<div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:var(--green);background:var(--gdim);padding:3px 10px;border-radius:20px;font-weight:600;">💡 $${daily}/día para llegar</span><button onclick="delMeta(${m.id})" style="background:var(--rdim);border:none;color:var(--red);font-size:11px;padding:4px 9px;border-radius:8px;cursor:pointer;font-family:var(--font);font-weight:600;">Borrar</button></div>`:`<div style="text-align:right;margin-top:8px;"><button onclick="delMeta(${m.id})" style="background:var(--rdim);border:none;color:var(--red);font-size:11px;padding:4px 9px;border-radius:8px;cursor:pointer;font-family:var(--font);font-weight:600;">Borrar</button></div>`}</div>`;
+  }).join('');
+}
+function delMeta(id){S.metas=S.metas.filter(m=>m.id!==id);sv();renderAll();}
+
+// ═══ DEUDAS ═══
+function renderDeudas(){
+  const{months,ti,cm}=simD(S.deudas);
+  const tot=S.deudas.reduce((s,d)=>s+d.saldo,0);
+  $('d-total').textContent=fmt(tot);
+  $('d-months').textContent=tot>0?`Libre en ~${months} meses · Interés est. ${fmt(ti)}`:'¡Sin deudas! 🎉';
+  const DCLRS=['var(--green)','var(--amber)','var(--red)','var(--blue)','var(--purple)'];
+  const DBGS=['var(--gdim)','var(--adim)','var(--rdim)','var(--bdim)','var(--pdim)'];
+  const LBLS=['1° Atacar primero','2° Mínimos','3° Mínimos','4°','5°'];
+  const el=$('deudaslist');
+  if(!S.deudas.length){el.innerHTML='<div class="empty"><div class="empty-e">🎉</div><div class="empty-t">Sin deudas</div><div class="empty-s">Agrega tus tarjetas para hacer seguimiento</div></div>';return;}
+  el.innerHTML=S.deudas.map((d,i)=>{
+    const clr=DCLRS[Math.min(i,4)],bg=DBGS[Math.min(i,4)],lbl=LBLS[Math.min(i,4)];
+    const cmo=cm[i]||months||'?';
+    const pp=d.total>0?Math.round((1-d.saldo/d.total)*100):0;
+    return`<div class="card"><div class="card-head"><div><div class="card-title">${d.name}</div></div><div style="font-size:20px;font-weight:700;color:${clr};">${fmt(d.saldo)}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span class="tag" style="background:${bg};color:${clr};">${lbl}</span><span class="tag" style="background:var(--card2);color:var(--muted2);">~${cmo} meses</span><span class="tag" style="background:var(--card2);color:var(--muted2);">${d.rate}%/mes</span></div><div class="bar5"><div class="bar5-fill" style="width:${pp}%;background:${clr};"></div></div><div class="debt-stats"><div class="ds"><div class="ds-v">${fmt(d.minPago)}</div><div class="ds-l">Mínimo</div></div><div class="ds"><div class="ds-v" style="color:var(--red);">${fmt(d.saldo*(d.rate/100))}</div><div class="ds-l">Interés/mes</div></div><div class="ds"><div class="ds-v" style="color:${clr};">${pp}%</div><div class="ds-l">Pagado</div></div></div><div class="debt-acts"><button class="dab" style="background:var(--gdim);color:var(--green);" onclick="openAbono(${d.id})">💰 Abonar</button><button class="dab" style="background:var(--rdim);color:var(--red);" onclick="delDeuda(${d.id})">🗑️ Eliminar</button></div></div>`;
+  }).join('');
+}
+function delDeuda(id){if(confirm('¿Eliminar esta deuda?')){S.deudas=S.deudas.filter(d=>d.id!==id);sv();renderAll();}}
+function openAbono(id){
+  const d=S.deudas.find(x=>x.id===id);if(!d)return;
+  stype='abono';abonoId=id;
+  $('sh-t').textContent='Registrar abono';$('sh-s').textContent='Reduce tu deuda';
+  hideF();$('f-abono').style.display='block';
+  $('ab-n').textContent=d.name;$('ab-b').textContent='Saldo: '+fmt(d.saldo);
+  $('ab-a').value='';
+  $('overlay').classList.add('on');
+  setTimeout(()=>$('ab-a').focus(),350);
+}
+
+// ═══ ANÁLISIS ═══
+function renderAnalisis(){
+  const c=calc();
+  const ents=Object.entries(c.byCat).sort((a,b)=>b[1]-a[1]);
+  const tot=ents.reduce((s,[,v])=>s+v,0)||1;
+  const cx=60,cy=60,r=44,sw=13,circ=2*Math.PI*r;
+  let off=0,paths='';
+  ents.forEach(([cat,amt])=>{const pct=amt/tot,dash=pct*circ,clr=cc(cat);paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${clr}" stroke-width="${sw}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-off}" transform="rotate(-90 ${cx} ${cy})"/>`;off+=dash;});
+  $('donut').innerHTML=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="${sw}"/>${paths}<text x="${cx}" y="${cy-3}" text-anchor="middle" fill="#E6E8EA" font-size="11" font-family="Poppins" font-weight="600">${ents.length}</text><text x="${cx}" y="${cy+11}" text-anchor="middle" fill="#9AA5B4" font-size="9" font-family="Poppins">cat.</text>`;
+  $('donut-leg').innerHTML=ents.slice(0,5).map(([cat,amt])=>`<div class="dl-item"><div class="dl-dot" style="background:${cc(cat)};"></div><span class="dl-n">${cat}</span><span class="dl-p" style="color:${cc(cat)};">${Math.round(amt/tot*100)}%</span></div>`).join('');
+  const vs=[280,390,350,470,410,c.gas],mb2=Math.max(...vs)||1,ms2=['Dic','Ene','Feb','Mar','Abr','May'];
+  $('abars').innerHTML=vs.map((v,i)=>{const h2=Math.max(Math.round(v/mb2*72),3);return`<div class="bc-col"><div class="bc-bar" style="height:${h2}px;background:${i===vs.length-1?'var(--green)':'rgba(22,199,154,0.25)'};"></div><span class="bc-l">${ms2[i]}</span></div>`;}).join('');
+  const lib=c.sal*0.6;
+  $('pred-t').textContent='A este ritmo terminarás el mes con:';
+  $('pred-v').textContent=fmt(Math.max(lib,0));
+  $('pred-v').style.color=lib>200?'var(--green)':lib>0?'var(--amber)':'var(--red)';
+  $('acats').innerHTML=ents.map(([cat,amt],i)=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${i<ents.length-1?'border-bottom:1px solid var(--border)':''}"><div style="width:36px;height:36px;border-radius:10px;background:${cc(cat)}22;display:flex;align-items:center;justify-content:center;font-size:17px;">${ce(cat)}</div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;">${cat}</div><div style="height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:5px;"><div style="height:100%;width:${Math.round(amt/tot*100)}%;background:${cc(cat)};border-radius:2px;"></div></div></div><div style="text-align:right;flex-shrink:0;"><div style="font-size:13px;font-weight:600;">${fmt(amt)}</div><div style="font-size:10px;color:var(--muted2);">${Math.round(amt/tot*100)}%</div></div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--muted2);font-size:13px;">Sin datos</div>';
+}
+
+// ═══ PERFIL ═══
+function renderPerfil(){
+  $('sc-nom').value=S.profile.name||'';
+  $('sc-sal').value=S.profile.salary||'';
+  $('p-name').textContent=S.profile.name||'Usuario';
+  $('hdr-name').textContent='Hola, '+(S.profile.name||'Enrique');
+  setFreqUI(S.profile.freq||'quincenal');
+  updMo();
+}
+function setFreq(f){S.profile.freq=f;sv();setFreqUI(f);updMo();renderInicio();}
+function setFreqUI(f){$('fb-q').className='fb'+(f==='quincenal'?' on':'');$('fb-m').className='fb'+(f==='mensual'?' on':'');$('sal-lbl').textContent=f==='quincenal'?'Monto por quincena':'Monto mensual';}
+function saveSal(){S.profile.salary=parseFloat($('sc-sal').value)||0;sv();updMo();renderInicio();}
+function saveProf(){S.profile.name=($('sc-nom').value||'').trim()||'Usuario';sv();renderInicio();}
+function updMo(){const s=S.profile.salary||0;$('sc-mo').textContent=fmt(S.profile.freq==='quincenal'?s*2:s);}
+
+// ═══ SUGERENCIAS ═══
+let sugT='💡 Sugerencia';
+function setSugT(t,el){sugT=t;document.querySelectorAll('.sug-chip').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function saveSug(){
+  const txt=$('sug-txt').value.trim();
+  if(!txt){$('sug-txt').style.borderColor='var(--red)';setTimeout(()=>$('sug-txt').style.borderColor='',1500);return;}
+  const N=new Date();const MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  if(!S.sugerencias)S.sugerencias=[];
+  S.sugerencias.unshift({id:++nid,tipo:sugT,texto:txt,fecha:N.getDate()+' '+MS[N.getMonth()]+' '+N.getFullYear()});
+  $('sug-txt').value='';sv();renderSug();alert('✅ ¡Gracias por tu sugerencia!');
+}
+function renderSug(){
+  const s=S.sugerencias||[];
+  $('sug-cnt').textContent=s.length?s.length+' sugerencia'+(s.length!==1?'s':''):'Sin sugerencias';
+  $('suglist').innerHTML=s.map(x=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--gdim);color:var(--green);">${x.tipo}</span><span style="font-size:11px;color:var(--muted2);">${x.fecha}</span></div><div style="font-size:13px;line-height:1.5;">${x.texto}</div></div>`).join('');
+}
+
+// ═══ FAB ═══
+let fabOpen=false;
+function togFab(){fabOpen=!fabOpen;$('fabmenu').classList.toggle('on',fabOpen);$('fabbtn').style.transform=fabOpen?'rotate(45deg)':'rotate(0)';}
+function closeFab(){fabOpen=false;$('fabmenu').classList.remove('on');$('fabbtn').style.transform='rotate(0)';}
+
+// ═══ SHEET ═══
+let stype='',txtype='gasto',selcat='Comida',abonoId=null;
+function hideF(){['f-tx','f-meta','f-deuda','f-abono'].forEach(id=>$(id).style.display='none');}
+function setTT(t){
+  txtype=t;selcat=t==='ingreso'?'Ingresos':'Comida';
+  $('tb-i').className='tb'+(t==='ingreso'?' ing':'');
+  $('tb-g').className='tb'+(t==='gasto'?' gas':'');
+  buildChips();
+}
+function buildChips(){
+  const cats=txtype==='ingreso'?['Ingresos','Otros']:CATS.filter(c=>c.name!=='Ingresos').map(c=>c.name);
+  $('chips').innerHTML=cats.map(cat=>`<div class="chip${cat===selcat?' on':''}" onclick="selCat('${cat}')">${ce(cat)} ${cat}</div>`).join('');
+}
+function selCat(c){selcat=c;buildChips();}
+function openSheet(type){
+  closeFab();stype=type;hideF();
+  if(type==='gasto'||type==='ingreso'){
+    $('sh-t').textContent=type==='gasto'?'Nuevo gasto':'Nuevo ingreso';
+    $('sh-s').textContent=type==='gasto'?'¿En qué gastaste?':'¿De dónde vino?';
+    $('f-tx').style.display='block';setTT(type);$('tx-n').value='';$('tx-a').value='';
+  }else if(type==='meta'){
+    $('sh-t').textContent='Nueva meta';$('sh-s').textContent='Define tu objetivo';
+    $('f-meta').style.display='block';$('me-n').value='';$('me-o').value='';$('me-a').value='0';
+    const d=new Date();d.setMonth(d.getMonth()+6);$('me-f').value=d.toISOString().split('T')[0];
+  }else if(type==='deuda'){
+    $('sh-t').textContent='Nueva deuda';$('sh-s').textContent='Agrega tarjeta o préstamo';
+    $('f-deuda').style.display='block';$('de-n').value='';$('de-t').value='';$('de-r').value='2.5';$('de-m').value='';
+  }
+  $('overlay').classList.add('on');
+  setTimeout(()=>{const f=$('f-'+type==='gasto'?'tx':type==='ingreso'?'tx':type);if(f){const i=f.querySelector('input');if(i)i.focus();}},350);
+}
+function closeSheet(){$('overlay').classList.remove('on');}
+function closeOv(e){if(e.target===$('overlay'))closeSheet();}
+function saveSheet(){
+  const N=new Date(),MS=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const ds=N.getFullYear()+'-'+(N.getMonth()+1).toString().padStart(2,'0')+'-'+N.getDate().toString().padStart(2,'0');
+  if(stype==='gasto'||stype==='ingreso'){
+    const name=$('tx-n').value.trim(),amount=parseFloat($('tx-a').value)||0;
+    if(!name||amount<=0){if(!name)$('tx-n').style.borderColor='var(--red)';if(!amount)$('tx-a').style.borderColor='var(--red)';setTimeout(()=>{$('tx-n').style.borderColor='';$('tx-a').style.borderColor='';},1500);return;}
+    S.transactions.push({id:++nid,tipo:txtype,name,cat:selcat,amount,date:ds,emoji:ce(selcat)});
+  }else if(stype==='meta'){
+    const name=$('me-n').value.trim(),obj=parseFloat($('me-o').value)||0,aho=parseFloat($('me-a').value)||0,fecha=$('me-f').value||'2026-12-31';
+    if(!name||obj<=0)return;
+    const emojis=['🎯','✈️','💻','🚗','🏠','🎓','💍','🏖️'];
+    S.metas.push({id:++nid,name,emoji:emojis[S.metas.length%emojis.length],objetivo:obj,ahorrado:aho,fecha});
+  }else if(stype==='deuda'){
+    const name=$('de-n').value.trim(),total=parseFloat($('de-t').value)||0,rate=parseFloat($('de-r').value)||2.5,min=parseFloat($('de-m').value)||Math.round(total*0.05);
+    if(!name||total<=0)return;
+    S.deudas.push({id:++nid,name,total,saldo:total,rate,minPago:min});
+  }else if(stype==='abono'){
+    const amt=parseFloat($('ab-a').value)||0;if(amt<=0)return;
+    const d=S.deudas.find(x=>x.id===abonoId);
+    if(d){d.saldo=Math.max(0,d.saldo-amt);if(d.saldo<=0.01)S.deudas=S.deudas.filter(x=>x.id!==abonoId);}
+    S.transactions.push({id:++nid,tipo:'gasto',name:'Abono deuda',cat:'Vivienda',amount:amt,date:ds,emoji:'💳'});
+  }
+  sv();closeSheet();renderAll();
+}
+
+// ═══ RENDER ALL ═══
+function renderAll(){renderInicio();renderMov();renderMetas();renderDeudas();renderPerfil();}
+
+// ═══ UTILS ═══
+function clearData(){if(confirm('¿Borrar todos los datos?')){localStorage.removeItem(SK);location.reload();}}
+
+// ═══ BOOT ═══
+if(S.unlocked){
+  $('main').style.display='flex';
+  renderAll();
+  // Hide splash after animation
+  setTimeout(()=>{const sp=$('splash');sp.classList.add('out');setTimeout(()=>sp.style.display='none',600);},2600);
+}else{
   initSplash();
 }
 
