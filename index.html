@@ -331,7 +331,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 </div>
 
 <!-- APP MAIN -->
-<div id="app-main" style="display:none;flex-direction:column;height:100%;position:relative;">
+<div id="app-main" style="display:none;position:absolute;inset:0;flex-direction:column;">
 <div class="scroll" id="scroll">
 
   <!-- ══ INICIO ══ -->
@@ -652,15 +652,10 @@ function unlockApp(){
   state.unlocked=true;
   save();
   $('paywall').style.display='none';
-  $('app-main').style.display='flex';
+  const am=$('app-main');am.style.display='flex';am.style.flexDirection='column';
   initApp();
 }
 // check if already unlocked
-if(state.unlocked){
-  $('paywall').style.display = 'none';
-  $('app-main').style.display = 'flex';
-}
-
 // ── CALC ──
 function calc(){
   const txs = state.transactions;
@@ -1118,7 +1113,7 @@ function initApp(){
 
 if(state.unlocked){
   $('paywall').style.display='none';
-  $('app-main').style.display='flex';
+  const am=$('app-main');am.style.display='flex';am.style.flexDirection='column';
   initApp();
 } else {
   initSplash();
